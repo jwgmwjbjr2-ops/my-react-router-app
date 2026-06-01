@@ -128,6 +128,7 @@ export default function Home() {
               <div style={{ marginTop: "1rem", fontSize: "0.95rem" }}>
                 <p><strong>About:</strong> Someone that thinks in systems and speaks in questions. Building, always curious with a quiet intensity that makes ordinary feel like it's hiding something worth discovering.</p>
                 <p style={{ marginTop: "1rem" }}><strong>Hobbies:</strong> Friends 🍻, Tech 💻, AI 🤖, Skiing ⛷️</p>
+                <p style={{ marginTop: "1rem" }}><strong>Social:</strong> <a href="https://www.linkedin.com/in/niklas-maximilian-milek-b2a277263/" target="_blank" rel="noreferrer" style={{color: "var(--accent-1)", fontWeight: "bold"}}>LinkedIn</a></p>
                 <p style={{ marginTop: "1rem" }}><strong>Fun Fact:</strong> Likes to burn through tokens 🔥</p>
               </div>
             </div>
@@ -151,7 +152,7 @@ export default function Home() {
               <div style={{ marginTop: "1rem", fontSize: "0.95rem" }}>
                 <p><strong>About:</strong> A generational coding talent fully dedicated to the craft, turning complex problems into elegant solutions with unwavering focus.</p>
                 <p style={{ marginTop: "1rem" }}><strong>Hobbies:</strong> Gaming 🎮</p>
-                <p style={{ marginTop: "1rem" }}><strong>Social:</strong> <a href="#" target="_blank" rel="noreferrer" style={{color: "var(--accent-3)", fontWeight: "bold"}}>LinkedIn</a> | <a href="#" target="_blank" rel="noreferrer" style={{color: "var(--accent-3)", fontWeight: "bold"}}>Instagram</a></p>
+                <p style={{ marginTop: "1rem" }}><strong>Social:</strong> <a href="https://www.linkedin.com/in/arda-kulac-804a48331/" target="_blank" rel="noreferrer" style={{color: "var(--accent-3)", fontWeight: "bold"}}>LinkedIn</a> | <a href="#" target="_blank" rel="noreferrer" style={{color: "var(--accent-3)", fontWeight: "bold"}}>Instagram</a></p>
                 <p style={{ marginTop: "1rem" }}><strong>Emojis:</strong> 🏀 😴 😡</p>
                 <p style={{ marginTop: "1rem" }}><strong>Fun Fact:</strong> Learned coding when I was 7</p>
               </div>
