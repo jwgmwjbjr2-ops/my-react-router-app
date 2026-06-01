@@ -3,8 +3,8 @@ import { useState, useEffect } from "react";
 
 export function meta({}: Route.MetaArgs) {
   return [
-    { title: "Dr. Niklas - Developer Portfolio" },
-    { name: "description", content: "Niklas's portfolio and hardware projects." },
+    { title: "Team Project Portfolio" },
+    { name: "description", content: "Hardware projects and team portfolio." },
   ];
 }
 
@@ -16,7 +16,7 @@ export default function Home() {
   const [todos, setTodos] = useState([
     { id: 1, text: "Build the Smart Jukebox", completed: true },
     { id: 2, text: "Write less generic copy", completed: true },
-    { id: 3, text: "Go skiing", completed: false }
+    { id: 3, text: "Fill in placeholder text", completed: false }
   ]);
   const [newTodo, setNewTodo] = useState("");
 
@@ -89,10 +89,25 @@ export default function Home() {
     setWaitingForNewValue(false);
   };
 
+  const PlaceholderList = () => (
+    <ul style={{ paddingLeft: "1.5rem", lineHeight: "1.6", marginTop: "1rem" }}>
+      <li>You will use this page to show yourself!</li>
+      <li>Names</li>
+      <li>Pictures</li>
+      <li>About me/us</li>
+      <li>Hobbys</li>
+      <li>Lists</li>
+      <li>URLs</li>
+      <li>Socials</li>
+      <li>Emojis</li>
+      <li>Be creative!</li>
+    </ul>
+  );
+
   return (
     <>
       <nav>
-        <h2 style={{ margin: 0 }}>Dr. Niklas</h2>
+        <h2 style={{ margin: 0 }}>Smart Jukebox Team</h2>
         <div className="nav-links">
           <button className="theme-btn" onClick={toggleTheme}>
             {theme === "dark-theme" ? "LIGHT MODE" : "DARK MODE"}
@@ -102,33 +117,33 @@ export default function Home() {
 
       <main className="container">
         
-        <section className="hero-grid">
-          <div className="avatar-box">
-            <img src="/avatar_niklas.png" alt="Niklas Avatar" />
-          </div>
-          <div className="hero-content">
-            <h1>Dr. Niklas</h1>
-            <p style={{ fontSize: "1.2rem", fontWeight: "bold" }}>
-              Tech. Friends. Skiing.
-            </p>
-            <p style={{ marginTop: "1rem" }}>
-              Not your average AI-generated bio. I build hardware, write code, and hit the slopes. 
-              Here is a jukebox I built when I was bored.
-            </p>
-            <div className="pills">
-              <span className="pill">Developer</span>
-              <span className="pill">Hardware</span>
+        <section>
+          <h2 className="project-header" style={{ marginTop: "2rem" }}>The Team</h2>
+          <div className="parts-grid" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))" }}>
+            <div className="part-card">
+              <div className="avatar-box" style={{ width: "120px", margin: "0 auto 1.5rem", boxShadow: "8px 8px 0px var(--accent-1)" }}>
+                <img src="/avatar_niklas.png" alt="Dr. Niklas Avatar" />
+              </div>
+              <h3 style={{ textAlign: "center" }}>Dr. Niklas</h3>
+              <PlaceholderList />
             </div>
-            <div style={{ marginTop: "2rem" }}>
-              <a href="https://github.com/jwgmwjbjr2-ops/my-react-router-app" target="_blank" rel="noreferrer">
-                <button className="brutal-btn">GitHub Repo</button>
-              </a>
+            <div className="part-card">
+              <div className="avatar-box" style={{ width: "120px", margin: "0 auto 1.5rem", background: "var(--accent-2)", boxShadow: "8px 8px 0px var(--accent-1)" }}>
+              </div>
+              <h3 style={{ textAlign: "center" }}>Dev 1</h3>
+              <PlaceholderList />
+            </div>
+            <div className="part-card">
+              <div className="avatar-box" style={{ width: "120px", margin: "0 auto 1.5rem", background: "var(--accent-3)", boxShadow: "8px 8px 0px var(--accent-1)" }}>
+              </div>
+              <h3 style={{ textAlign: "center" }}>Dev 2</h3>
+              <PlaceholderList />
             </div>
           </div>
         </section>
 
         <section>
-          <h2 className="project-header">Project 01: Smart Jukebox</h2>
+          <h2 className="project-header" style={{ marginTop: "6rem" }}>Project 01: Smart Jukebox</h2>
           <p style={{ marginBottom: "2rem", maxWidth: "700px" }}>
             RFID-triggered music & mood lighting. Tap a card — it recognises you, plays your song, and pulses the room in colour for every note. No apps, no screens. Just hardware.
           </p>
@@ -168,31 +183,6 @@ export default function Home() {
               <img src="https://www.az-delivery.de/cdn/shop/products/led-leuchtdioden-sortiment-kit-350-stuck-3mm-5mm-5-farben-864313.jpg?v=1679398918&width=400" alt="RGB LED" style={{ width: "100%", border: "var(--border-width) solid var(--border-color)", marginBottom: "1rem", aspectRatio: "4/3", objectFit: "cover" }} />
               <h4>RGB LED</h4>
               <p>PWM colour pulse for every note. Synchronised light show.</p>
-            </div>
-          </div>
-        </section>
-
-        <section>
-          <h2 className="project-header" style={{ marginTop: "6rem" }}>The Team</h2>
-          <div className="parts-grid">
-            <div className="part-card" style={{ textAlign: "center" }}>
-              <div className="avatar-box" style={{ width: "150px", margin: "0 auto 1.5rem", boxShadow: "8px 8px 0px var(--accent-1)" }}>
-                <img src="/avatar_niklas.png" alt="Dr. Niklas Avatar" />
-              </div>
-              <h3>Dr. Niklas</h3>
-              <p style={{ marginTop: "0.5rem" }}>Lead Developer</p>
-            </div>
-            <div className="part-card" style={{ textAlign: "center" }}>
-              <div className="avatar-box" style={{ width: "150px", margin: "0 auto 1.5rem", background: "var(--accent-2)", boxShadow: "8px 8px 0px var(--accent-1)" }}>
-              </div>
-              <h3>Dev 1</h3>
-              <p style={{ marginTop: "0.5rem" }}>Co-Developer (Placeholder)</p>
-            </div>
-            <div className="part-card" style={{ textAlign: "center" }}>
-              <div className="avatar-box" style={{ width: "150px", margin: "0 auto 1.5rem", background: "var(--accent-3)", boxShadow: "8px 8px 0px var(--accent-1)" }}>
-              </div>
-              <h3>Dev 2</h3>
-              <p style={{ marginTop: "0.5rem" }}>Co-Developer (Placeholder)</p>
             </div>
           </div>
         </section>
