@@ -127,7 +127,7 @@ export default function Home() {
               <h3 style={{ textAlign: "center" }}>Niklas</h3>
               <div style={{ marginTop: "1rem", fontSize: "0.95rem" }}>
                 <p><strong>About:</strong> Someone that thinks in systems and speaks in questions. Building, always curious with a quiet intensity that makes ordinary feel like it's hiding something worth discovering.</p>
-                <p style={{ marginTop: "1rem" }}><strong>Hobbies:</strong> Freunde 🍻, Technik 💻, AI 🤖, Skifahren ⛷️</p>
+                <p style={{ marginTop: "1rem" }}><strong>Hobbies:</strong> Friends 🍻, Tech 💻, AI 🤖, Skiing ⛷️</p>
                 <p style={{ marginTop: "1rem" }}><strong>Fun Fact:</strong> Likes to burn through tokens 🔥</p>
               </div>
             </div>
@@ -138,7 +138,7 @@ export default function Home() {
               <h3 style={{ textAlign: "center" }}>Liam</h3>
               <div style={{ marginTop: "1rem", fontSize: "0.95rem" }}>
                 <p><strong>About:</strong> Full-stack enthusiast who turns caffeine into clean code. Always looking for the next big wave.</p>
-                <p style={{ marginTop: "1rem" }}><strong>Hobbies:</strong> Programmieren 👨‍💻, Kitesurfen 🪁, Volleyball 🏐</p>
+                <p style={{ marginTop: "1rem" }}><strong>Hobbies:</strong> Programming 👨‍💻, Kitesurfing 🪁, Volleyball 🏐</p>
                 <p style={{ marginTop: "1rem" }}><strong>Social:</strong> <a href="https://www.linkedin.com/in/liam-bargmann-102147369/" target="_blank" rel="noreferrer" style={{color: "var(--accent-2)", fontWeight: "bold"}}>LinkedIn</a></p>
                 <p style={{ marginTop: "1rem" }}><strong>Fun Fact:</strong> Can debug CSS without crying 🎯</p>
               </div>
