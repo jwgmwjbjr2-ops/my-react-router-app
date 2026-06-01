@@ -109,11 +109,6 @@ export default function Home() {
       newValueStr = calcDisplay === "0" ? digit : calcDisplay + digit;
     }
 
-    if (newValueStr === "1337") {
-      setCalcDisplay("1337 (Elite Hacker 😎)");
-      setWaitingForNewValue(true);
-      return;
-    }
     if (newValueStr === "42") {
       setCalcDisplay("42 (The Answer 🌌)");
       setWaitingForNewValue(true);
