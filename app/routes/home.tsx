@@ -55,9 +55,11 @@ export default function Home() {
   
   // Todo List State
   const [todos, setTodos] = useState([
-    { id: 1, text: "Build the Smart Jukebox", completed: true },
-    { id: 2, text: "Write less generic copy", completed: true },
-    { id: 3, text: "Fill in placeholder text", completed: false }
+    { id: 1, text: "Calculate 6 * 7 to find the meaning of life", completed: false },
+    { id: 2, text: "Try dividing 1 by 0 (Warning: Void)", completed: false },
+    { id: 3, text: "Calculate 80000 + 85 to regress to middle school", completed: false },
+    { id: 4, text: "Calculate 9999999 + 1 to test the Arduino's RAM", completed: false },
+    { id: 5, text: "Build an actual Smart Jukebox", completed: true }
   ]);
   const [newTodo, setNewTodo] = useState("");
 
@@ -157,7 +159,16 @@ export default function Home() {
       }
 
       setCalcValue(newValue);
-      setCalcDisplay(String(newValue));
+      
+      if (newValue === 42) {
+        setCalcDisplay("42 (The Answer 🌌)");
+      } else if (newValue === 80085) {
+        setCalcDisplay("80085 (Grow up. 🙄)");
+      } else if (newValue === 69) {
+        setCalcDisplay("69 (Nice. 👍)");
+      } else {
+        setCalcDisplay(String(newValue));
+      }
     }
     
     setWaitingForNewValue(true);
