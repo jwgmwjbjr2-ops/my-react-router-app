@@ -148,9 +148,6 @@ export default function Home() {
             RFID-triggered music & mood lighting. Tap a card — it recognises you, plays your song, and pulses the room in colour for every note. No apps, no screens. Just hardware.
           </p>
 
-          <div style={{ marginBottom: "2rem" }}>
-            <img src="/jukebox_hero.png" alt="Smart Jukebox functionality" style={{ width: "100%", border: "var(--border-width) solid var(--border-color)", boxShadow: "12px 12px 0px var(--accent-1)", background: "#000" }} />
-          </div>
           <div className="video-wrapper">
             <video controls autoPlay loop muted>
               <source src="/jukebox_demo.mp4" type="video/mp4" />
