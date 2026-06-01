@@ -66,6 +66,7 @@ export default function Home() {
   const [calcValue, setCalcValue] = useState<number | null>(null);
   const [calcOp, setCalcOp] = useState<string | null>(null);
   const [waitingForNewValue, setWaitingForNewValue] = useState(false);
+  const [isExploded, setIsExploded] = useState(false);
 
   // RFID Scanner State
   const [isScannerUnlocked, setIsScannerUnlocked] = useState(false);
@@ -146,10 +147,7 @@ export default function Home() {
       else if (calcOp === "*") newValue = currentValue * inputValue;
       else if (calcOp === "/") {
         if (inputValue === 0) {
-          setCalcDisplay("Universe implosion prevented.");
-          setWaitingForNewValue(true);
-          setCalcOp(null);
-          setCalcValue(null);
+          setIsExploded(true);
           return;
         }
         newValue = currentValue / inputValue;
@@ -179,6 +177,10 @@ export default function Home() {
   };
 
   const convertToBinary = () => {
+    if (/[a-zA-Z]/.test(calcDisplay)) {
+      setIsExploded(true);
+      return;
+    }
     const num = parseInt(calcDisplay, 10);
     if (!isNaN(num)) {
       setCalcDisplay(num.toString(2));
@@ -409,36 +411,45 @@ export default function Home() {
           </div>
 
           {/* CALCULATOR */}
-          <div className="brutal-card interactive">
-            <h3 style={{ marginBottom: "1rem" }}>Snarky Calc</h3>
-            <div className="calc-display">{calcDisplay}</div>
-            
-            <div className="calc-grid">
-              <button className="c-btn" onClick={clearCalc}>C</button>
-              <button className="c-btn op" onClick={() => performOperation("/")}>/</button>
-              <button className="c-btn op" onClick={() => performOperation("*")}>*</button>
-              <button className="c-btn op" onClick={() => performOperation("-")}>-</button>
-              
-              <button className="c-btn" onClick={() => inputDigit("7")}>7</button>
-              <button className="c-btn" onClick={() => inputDigit("8")}>8</button>
-              <button className="c-btn" onClick={() => inputDigit("9")}>9</button>
-              <button className="c-btn op" onClick={() => performOperation("+")} style={{ gridRow: "span 2" }}>+</button>
-              
-              <button className="c-btn" onClick={() => inputDigit("4")}>4</button>
-              <button className="c-btn" onClick={() => inputDigit("5")}>5</button>
-              <button className="c-btn" onClick={() => inputDigit("6")}>6</button>
-              
-              <button className="c-btn" onClick={() => inputDigit("1")}>1</button>
-              <button className="c-btn" onClick={() => inputDigit("2")}>2</button>
-              <button className="c-btn" onClick={() => inputDigit("3")}>3</button>
-              <button className="c-btn eq" onClick={() => performOperation("=")} style={{ gridRow: "span 2" }}>=</button>
-              
-              <button className="c-btn" onClick={() => inputDigit("0")} style={{ gridColumn: "span 2" }}>0</button>
-              <button className="c-btn" onClick={() => inputDigit(".")}>.</button>
-              
-              <button className="brutal-btn" onClick={convertToBinary} style={{ gridColumn: "span 4", marginTop: "1rem" }}>Convert to BINARY</button>
+          {isExploded ? (
+            <div className="brutal-card interactive" style={{ textAlign: "center", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", minHeight: "350px", animation: "partyShake 0.1s infinite" }}>
+              <span style={{ fontSize: "6rem" }}>💥</span>
+              <h2>BOOM!</h2>
+              <p>You crashed the Arduino.</p>
+              <button className="brutal-btn" style={{ marginTop: "1rem" }} onClick={() => { setIsExploded(false); clearCalc(); }}>Reboot System</button>
             </div>
-          </div>
+          ) : (
+            <div className="brutal-card interactive">
+              <h3 style={{ marginBottom: "1rem" }}>Snarky Calc</h3>
+              <div className="calc-display">{calcDisplay}</div>
+              
+              <div className="calc-grid">
+                <button className="c-btn" onClick={clearCalc}>C</button>
+                <button className="c-btn op" onClick={() => performOperation("/")}>/</button>
+                <button className="c-btn op" onClick={() => performOperation("*")}>*</button>
+                <button className="c-btn op" onClick={() => performOperation("-")}>-</button>
+                
+                <button className="c-btn" onClick={() => inputDigit("7")}>7</button>
+                <button className="c-btn" onClick={() => inputDigit("8")}>8</button>
+                <button className="c-btn" onClick={() => inputDigit("9")}>9</button>
+                <button className="c-btn op" onClick={() => performOperation("+")} style={{ gridRow: "span 2" }}>+</button>
+                
+                <button className="c-btn" onClick={() => inputDigit("4")}>4</button>
+                <button className="c-btn" onClick={() => inputDigit("5")}>5</button>
+                <button className="c-btn" onClick={() => inputDigit("6")}>6</button>
+                
+                <button className="c-btn" onClick={() => inputDigit("1")}>1</button>
+                <button className="c-btn" onClick={() => inputDigit("2")}>2</button>
+                <button className="c-btn" onClick={() => inputDigit("3")}>3</button>
+                <button className="c-btn eq" onClick={() => performOperation("=")} style={{ gridRow: "span 2" }}>=</button>
+                
+                <button className="c-btn" onClick={() => inputDigit("0")} style={{ gridColumn: "span 2" }}>0</button>
+                <button className="c-btn" onClick={() => inputDigit(".")}>.</button>
+                
+                <button className="brutal-btn" onClick={convertToBinary} style={{ gridColumn: "span 4", marginTop: "1rem" }}>Convert to BINARY</button>
+              </div>
+            </div>
+          )}
 
         </div>
 
