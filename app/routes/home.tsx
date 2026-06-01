@@ -98,12 +98,38 @@ export default function Home() {
 
   // Calculator Handlers
   const inputDigit = (digit: string) => {
-    if (waitingForNewValue) {
-      setCalcDisplay(digit);
+    const hasLetters = /[a-zA-Z]/.test(calcDisplay);
+    let newValueStr = "";
+    
+    if (waitingForNewValue || hasLetters) {
+      newValueStr = digit;
       setWaitingForNewValue(false);
     } else {
-      setCalcDisplay(calcDisplay === "0" ? digit : calcDisplay + digit);
+      newValueStr = calcDisplay === "0" ? digit : calcDisplay + digit;
     }
+
+    if (newValueStr === "1337") {
+      setCalcDisplay("1337 (Elite Hacker 😎)");
+      setWaitingForNewValue(true);
+      return;
+    }
+    if (newValueStr === "42") {
+      setCalcDisplay("42 (The Answer 🌌)");
+      setWaitingForNewValue(true);
+      return;
+    }
+    if (newValueStr === "80085") {
+      setCalcDisplay("80085 (Grow up. 🙄)");
+      setWaitingForNewValue(true);
+      return;
+    }
+    if (newValueStr === "69") {
+      setCalcDisplay("69 (Nice. 👍)");
+      setWaitingForNewValue(true);
+      return;
+    }
+
+    setCalcDisplay(newValueStr);
   };
 
   const performOperation = (nextOp: string) => {
@@ -129,6 +155,14 @@ export default function Home() {
         newValue = currentValue / inputValue;
       }
       
+      if (newValue > 9999999) {
+        setCalcDisplay("Bro, chill. It's an Arduino.");
+        setWaitingForNewValue(true);
+        setCalcOp(null);
+        setCalcValue(null);
+        return;
+      }
+
       setCalcValue(newValue);
       setCalcDisplay(String(newValue));
     }
@@ -238,9 +272,6 @@ export default function Home() {
             RFID-triggered music & mood lighting. Tap a card — it recognises you, plays your song, and pulses the room in colour for every note. No apps, no screens. Just hardware.
           </p>
 
-          <div style={{ marginBottom: "2rem" }}>
-            <img src="/jukebox_hero.png" alt="Smart Jukebox functionality" style={{ width: "100%", border: "var(--border-width) solid var(--border-color)", boxShadow: "12px 12px 0px var(--accent-1)", background: "#000" }} />
-          </div>
           <div className="video-wrapper">
             <video controls autoPlay loop muted>
               <source src="/jukebox_demo.mp4" type="video/mp4" />
