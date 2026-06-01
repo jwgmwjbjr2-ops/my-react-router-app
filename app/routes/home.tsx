@@ -14,11 +14,11 @@ export default function Home() {
   // Guessing Game State
   const [guess, setGuess] = useState(0);
   const [gameMessage, setGameMessage] = useState("Guess the total cost of the Smart Jukebox parts!");
-  const actualCost = 20;
+  const actualCost = 35;
 
   const handleGuess = () => {
     if (guess === actualCost) {
-      setGameMessage("🎉 Spot on! It costs exactly €20.");
+      setGameMessage("🎉 Spot on! It costs exactly €35.");
     } else if (guess < actualCost) {
       setGameMessage("Too low! Hardware isn't that cheap.");
     } else {
