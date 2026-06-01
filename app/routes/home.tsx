@@ -275,7 +275,7 @@ export default function Home() {
         </section>
 
         <section>
-          <h2 className="project-header" style={{ marginTop: "6rem" }}>Project 01: Smart Jukebox</h2>
+          <h2 className="project-header" style={{ marginTop: "6rem" }}>Project: Smart Jukebox</h2>
           <p style={{ marginBottom: "2rem", maxWidth: "700px" }}>
             RFID-triggered music & mood lighting. Tap a card — it recognises you, plays your song, and pulses the room in colour for every note. No apps, no screens. Just hardware.
           </p>
