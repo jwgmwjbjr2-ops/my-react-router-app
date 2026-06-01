@@ -133,6 +133,9 @@ export default function Home() {
             RFID-triggered music & mood lighting. Tap a card — it recognises you, plays your song, and pulses the room in colour for every note. No apps, no screens. Just hardware.
           </p>
 
+          <div style={{ marginBottom: "2rem" }}>
+            <img src="/jukebox_hero.png" alt="Smart Jukebox functionality" style={{ width: "100%", border: "var(--border-width) solid var(--border-color)", boxShadow: "12px 12px 0px var(--accent-1)", background: "#000" }} />
+          </div>
           <div className="video-wrapper">
             <video controls autoPlay loop muted>
               <source src="/jukebox_demo.mp4" type="video/mp4" />
@@ -142,22 +145,27 @@ export default function Home() {
           <h3 style={{ marginBottom: "1.5rem" }}>BOM (Bill of Materials)</h3>
           <div className="parts-grid">
             <div className="part-card">
+              <img src="https://www.az-delivery.de/cdn/shop/products/mikrocontroller-board-lgt8f328p-mit-ch340-kompatibel-mit-arduino-ide-303972.jpg?v=1686855011&width=400" alt="Arduino UNO" style={{ width: "100%", border: "var(--border-width) solid var(--border-color)", marginBottom: "1rem", aspectRatio: "4/3", objectFit: "cover" }} />
               <h4>Arduino UNO</h4>
               <p>The brain. Runs the state machine, coordinates SPI for RFID, tone output, and PWM LEDs.</p>
             </div>
             <div className="part-card">
+              <img src="https://www.az-delivery.de/cdn/shop/products/rfid-kit-rc522-mit-reader-chip-und-card-fur-raspberry-pi-und-co-1356mhz-593133.jpg?v=1679399176&width=400" alt="MFRC522 RFID" style={{ width: "100%", border: "var(--border-width) solid var(--border-color)", marginBottom: "1rem", aspectRatio: "4/3", objectFit: "cover" }} />
               <h4>MFRC522 RFID</h4>
               <p>Reads card UIDs at 13.56 MHz over SPI. Each UID maps to a song.</p>
             </div>
             <div className="part-card">
+              <img src="https://www.az-delivery.de/cdn/shop/products/ky-023-joystick-modul-fur-uno-r3-501545.jpg?v=1679398844&width=400" alt="KY-023 Joystick" style={{ width: "100%", border: "var(--border-width) solid var(--border-color)", marginBottom: "1rem", aspectRatio: "4/3", objectFit: "cover" }} />
               <h4>KY-023 Joystick</h4>
               <p>Dual-axis analog input (X = tempo, Y = brightness) + pause button.</p>
             </div>
             <div className="part-card">
+              <img src="https://www.az-delivery.de/cdn/shop/products/ky-006-passiver-piezo-buzzer-alarm-modul-932847.jpg?v=1679398800&width=400" alt="Piezo Buzzer" style={{ width: "100%", border: "var(--border-width) solid var(--border-color)", marginBottom: "1rem", aspectRatio: "4/3", objectFit: "cover" }} />
               <h4>Piezo Buzzer</h4>
               <p>Generates 8-bit melodies. Mario, Tetris, ABBA. You name it.</p>
             </div>
             <div className="part-card">
+              <img src="https://www.az-delivery.de/cdn/shop/products/led-leuchtdioden-sortiment-kit-350-stuck-3mm-5mm-5-farben-864313.jpg?v=1679398918&width=400" alt="RGB LED" style={{ width: "100%", border: "var(--border-width) solid var(--border-color)", marginBottom: "1rem", aspectRatio: "4/3", objectFit: "cover" }} />
               <h4>RGB LED</h4>
               <p>PWM colour pulse for every note. Synchronised light show.</p>
             </div>
