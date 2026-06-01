@@ -367,97 +367,101 @@ export default function Home() {
           </div>
         </div>
 
-        <div className="brutal-card interactive" style={{ textAlign: "center" }}>
-          <h3 style={{ marginBottom: "1rem" }}>Guess the BOM Cost (€)</h3>
-          <p style={{ marginBottom: "1rem", color: "var(--accent-1)", fontWeight: "bold" }}>{gameMessage}</p>
-          <div style={{ display: "flex", justifyContent: "center", alignItems: "center", gap: "1rem" }}>
-            <button className="brutal-btn" onClick={() => setGuess(g => Math.max(0, g - 1))}>-</button>
-            <span style={{ fontSize: "2.5rem", fontWeight: "bold", width: "80px" }}>€{guess}</span>
-            <button className="brutal-btn" onClick={() => setGuess(g => g + 1)}>+</button>
-          </div>
-          <button className="brutal-btn" style={{ marginTop: "1.5rem" }} onClick={handleGuess}>Submit Guess</button>
-        </div>
-
-        <div className="interactive-grid">
-          
-          {/* TODO LIST */}
-          <div className="brutal-card interactive">
-            <h3 style={{ marginBottom: "1rem" }}>Tasks</h3>
-            <form onSubmit={addTodo} style={{ display: "flex", gap: "0.5rem", marginBottom: "1rem" }}>
-              <input 
-                type="text" 
-                className="brutal-input" 
-                placeholder="What next?" 
-                value={newTodo}
-                onChange={(e) => setNewTodo(e.target.value)}
-              />
-              <button type="submit" className="brutal-btn">Add</button>
-            </form>
-            
-            <div className="todo-list">
-              {todos.map(todo => (
-                <div key={todo.id} className={`todo-item ${todo.completed ? 'done' : ''}`}>
-                  <label style={{ cursor: "pointer", display: "flex", alignItems: "center", gap: "0.5rem" }}>
-                    <input 
-                      type="checkbox" 
-                      checked={todo.completed}
-                      onChange={() => toggleTodo(todo.id)}
-                    />
-                    {todo.text}
-                  </label>
-                  <button 
-                    onClick={() => deleteTodo(todo.id)}
-                    style={{ background: "none", border: "none", cursor: "pointer", fontSize: "1.2rem", color: "var(--accent-1)" }}
-                  >
-                    X
-                  </button>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* CALCULATOR */}
-          {isExploded ? (
-            <div className="brutal-card interactive" style={{ textAlign: "center", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", minHeight: "350px", animation: "partyShake 0.1s infinite" }}>
-              <span style={{ fontSize: "6rem" }}>💥</span>
-              <h2>BOOM!</h2>
-              <p>You crashed the Arduino.</p>
-              <button className="brutal-btn" style={{ marginTop: "1rem" }} onClick={() => { setIsExploded(false); clearCalc(); }}>Reboot System</button>
-            </div>
-          ) : (
-            <div className="brutal-card interactive">
-              <h3 style={{ marginBottom: "1rem" }}>Arduino Calc</h3>
-              <div className="calc-display">{calcDisplay}</div>
-              
-              <div className="calc-grid">
-                <button className="c-btn" onClick={clearCalc}>C</button>
-                <button className="c-btn op" onClick={() => performOperation("/")}>/</button>
-                <button className="c-btn op" onClick={() => performOperation("*")}>*</button>
-                <button className="c-btn op" onClick={() => performOperation("-")}>-</button>
-                
-                <button className="c-btn" onClick={() => inputDigit("7")}>7</button>
-                <button className="c-btn" onClick={() => inputDigit("8")}>8</button>
-                <button className="c-btn" onClick={() => inputDigit("9")}>9</button>
-                <button className="c-btn op" onClick={() => performOperation("+")} style={{ gridRow: "span 2" }}>+</button>
-                
-                <button className="c-btn" onClick={() => inputDigit("4")}>4</button>
-                <button className="c-btn" onClick={() => inputDigit("5")}>5</button>
-                <button className="c-btn" onClick={() => inputDigit("6")}>6</button>
-                
-                <button className="c-btn" onClick={() => inputDigit("1")}>1</button>
-                <button className="c-btn" onClick={() => inputDigit("2")}>2</button>
-                <button className="c-btn" onClick={() => inputDigit("3")}>3</button>
-                <button className="c-btn eq" onClick={() => performOperation("=")} style={{ gridRow: "span 2" }}>=</button>
-                
-                <button className="c-btn" onClick={() => inputDigit("0")} style={{ gridColumn: "span 2" }}>0</button>
-                <button className="c-btn" onClick={() => inputDigit(".")}>.</button>
-                
-                <button className="brutal-btn" onClick={convertToBinary} style={{ gridColumn: "span 4", marginTop: "1rem" }}>Convert to BINARY</button>
+        {isScannerUnlocked && (
+          <>
+            <div className="brutal-card interactive" style={{ textAlign: "center" }}>
+              <h3 style={{ marginBottom: "1rem" }}>Guess the BOM Cost (€)</h3>
+              <p style={{ marginBottom: "1rem", color: "var(--accent-1)", fontWeight: "bold" }}>{gameMessage}</p>
+              <div style={{ display: "flex", justifyContent: "center", alignItems: "center", gap: "1rem" }}>
+                <button className="brutal-btn" onClick={() => setGuess(g => Math.max(0, g - 1))}>-</button>
+                <span style={{ fontSize: "2.5rem", fontWeight: "bold", width: "80px" }}>€{guess}</span>
+                <button className="brutal-btn" onClick={() => setGuess(g => g + 1)}>+</button>
               </div>
+              <button className="brutal-btn" style={{ marginTop: "1.5rem" }} onClick={handleGuess}>Submit Guess</button>
             </div>
-          )}
 
-        </div>
+            <div className="interactive-grid">
+              
+              {/* TODO LIST */}
+              <div className="brutal-card interactive">
+                <h3 style={{ marginBottom: "1rem" }}>Tasks</h3>
+                <form onSubmit={addTodo} style={{ display: "flex", gap: "0.5rem", marginBottom: "1rem" }}>
+                  <input 
+                    type="text" 
+                    className="brutal-input" 
+                    placeholder="What next?" 
+                    value={newTodo}
+                    onChange={(e) => setNewTodo(e.target.value)}
+                  />
+                  <button type="submit" className="brutal-btn">Add</button>
+                </form>
+                
+                <div className="todo-list">
+                  {todos.map(todo => (
+                    <div key={todo.id} className={`todo-item ${todo.completed ? 'done' : ''}`}>
+                      <label style={{ cursor: "pointer", display: "flex", alignItems: "center", gap: "0.5rem" }}>
+                        <input 
+                          type="checkbox" 
+                          checked={todo.completed}
+                          onChange={() => toggleTodo(todo.id)}
+                        />
+                        {todo.text}
+                      </label>
+                      <button 
+                        onClick={() => deleteTodo(todo.id)}
+                        style={{ background: "none", border: "none", cursor: "pointer", fontSize: "1.2rem", color: "var(--accent-1)" }}
+                      >
+                        X
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* CALCULATOR */}
+              {isExploded ? (
+                <div className="brutal-card interactive" style={{ textAlign: "center", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", minHeight: "350px", animation: "partyShake 0.1s infinite" }}>
+                  <span style={{ fontSize: "6rem" }}>💥</span>
+                  <h2>BOOM!</h2>
+                  <p>You crashed the Arduino.</p>
+                  <button className="brutal-btn" style={{ marginTop: "1rem" }} onClick={() => { setIsExploded(false); clearCalc(); }}>Reboot System</button>
+                </div>
+              ) : (
+                <div className="brutal-card interactive">
+                  <h3 style={{ marginBottom: "1rem" }}>Arduino Calc</h3>
+                  <div className="calc-display">{calcDisplay}</div>
+                  
+                  <div className="calc-grid">
+                    <button className="c-btn" onClick={clearCalc}>C</button>
+                    <button className="c-btn op" onClick={() => performOperation("/")}>/</button>
+                    <button className="c-btn op" onClick={() => performOperation("*")}>*</button>
+                    <button className="c-btn op" onClick={() => performOperation("-")}>-</button>
+                    
+                    <button className="c-btn" onClick={() => inputDigit("7")}>7</button>
+                    <button className="c-btn" onClick={() => inputDigit("8")}>8</button>
+                    <button className="c-btn" onClick={() => inputDigit("9")}>9</button>
+                    <button className="c-btn op" onClick={() => performOperation("+")} style={{ gridRow: "span 2" }}>+</button>
+                    
+                    <button className="c-btn" onClick={() => inputDigit("4")}>4</button>
+                    <button className="c-btn" onClick={() => inputDigit("5")}>5</button>
+                    <button className="c-btn" onClick={() => inputDigit("6")}>6</button>
+                    
+                    <button className="c-btn" onClick={() => inputDigit("1")}>1</button>
+                    <button className="c-btn" onClick={() => inputDigit("2")}>2</button>
+                    <button className="c-btn" onClick={() => inputDigit("3")}>3</button>
+                    <button className="c-btn eq" onClick={() => performOperation("=")} style={{ gridRow: "span 2" }}>=</button>
+                    
+                    <button className="c-btn" onClick={() => inputDigit("0")} style={{ gridColumn: "span 2" }}>0</button>
+                    <button className="c-btn" onClick={() => inputDigit(".")}>.</button>
+                    
+                    <button className="brutal-btn" onClick={convertToBinary} style={{ gridColumn: "span 4", marginTop: "1rem" }}>Convert to BINARY</button>
+                  </div>
+                </div>
+              )}
+
+            </div>
+          </>
+        )}
 
       </main>
     </>
