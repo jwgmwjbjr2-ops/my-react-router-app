@@ -172,6 +172,31 @@ export default function Home() {
           </div>
         </section>
 
+        <section>
+          <h2 className="project-header" style={{ marginTop: "6rem" }}>The Team</h2>
+          <div className="parts-grid">
+            <div className="part-card" style={{ textAlign: "center" }}>
+              <div className="avatar-box" style={{ width: "150px", margin: "0 auto 1.5rem", boxShadow: "8px 8px 0px var(--accent-1)" }}>
+                <img src="/avatar_niklas.png" alt="Dr. Niklas Avatar" />
+              </div>
+              <h3>Dr. Niklas</h3>
+              <p style={{ marginTop: "0.5rem" }}>Lead Developer</p>
+            </div>
+            <div className="part-card" style={{ textAlign: "center" }}>
+              <div className="avatar-box" style={{ width: "150px", margin: "0 auto 1.5rem", background: "var(--accent-2)", boxShadow: "8px 8px 0px var(--accent-1)" }}>
+              </div>
+              <h3>Dev 1</h3>
+              <p style={{ marginTop: "0.5rem" }}>Co-Developer (Placeholder)</p>
+            </div>
+            <div className="part-card" style={{ textAlign: "center" }}>
+              <div className="avatar-box" style={{ width: "150px", margin: "0 auto 1.5rem", background: "var(--accent-3)", boxShadow: "8px 8px 0px var(--accent-1)" }}>
+              </div>
+              <h3>Dev 2</h3>
+              <p style={{ marginTop: "0.5rem" }}>Co-Developer (Placeholder)</p>
+            </div>
+          </div>
+        </section>
+
         <h2 className="project-header" style={{ marginTop: "6rem" }}>Playground</h2>
         
         <div className="brutal-card interactive" style={{ textAlign: "center" }}>
