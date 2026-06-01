@@ -3,8 +3,13 @@ import tailwindcss from "@tailwindcss/vite";
 import { defineConfig } from "vite";
 
 export default defineConfig({
+    server: {
+        watch: {
+            ignored: ['**/.vs/**']
+        }
+    }
   plugins: [tailwindcss(), reactRouter()],
   resolve: {
     tsconfigPaths: true,
-  },
+    },
 });
