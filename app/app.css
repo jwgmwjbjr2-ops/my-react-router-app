@@ -297,3 +297,71 @@ nav {
     grid-template-columns: 1fr;
   }
 }
+
+/* --- Party Mode --- */
+@keyframes partyBackground {
+  0% { background-color: #ff00ff; color: #ffff00; }
+  33% { background-color: #00ffff; color: #ff00ff; }
+  66% { background-color: #ffff00; color: #00ffff; }
+  100% { background-color: #ff00ff; color: #ffff00; }
+}
+
+@keyframes partyShake {
+  0% { transform: translate(2px, 2px) rotate(0deg); }
+  25% { transform: translate(-2px, -2px) rotate(-1deg); }
+  50% { transform: translate(-2px, 2px) rotate(1deg); }
+  75% { transform: translate(2px, -2px) rotate(0deg); }
+  100% { transform: translate(2px, 2px) rotate(0deg); }
+}
+
+.party-mode {
+  animation: partyBackground 0.3s infinite alternate;
+}
+
+.party-mode .brutal-card,
+.party-mode .part-card {
+  animation: partyShake 0.1s infinite;
+  box-shadow: 12px 12px 0px #00ff00 !important;
+  border-color: #ff00ff !important;
+}
+
+.party-mode h1, .party-mode h2, .party-mode h3 {
+  font-family: 'Comic Sans MS', cursive, sans-serif !important;
+}
+
+/* --- RFID Scanner --- */
+.rfid-scanner {
+  border: 4px dashed var(--border-color);
+  background: var(--card-bg);
+  padding: 3rem;
+  text-align: center;
+  transition: all 0.3s;
+  min-height: 150px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.rfid-scanner.drag-over {
+  background: var(--accent-4);
+  transform: scale(1.05);
+}
+
+.rfid-card {
+  width: 120px;
+  height: 180px;
+  background: var(--accent-3);
+  border: var(--border-width) solid var(--border-color);
+  box-shadow: 4px 4px 0px var(--border-color);
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  cursor: grab;
+  font-weight: bold;
+  user-select: none;
+}
+.rfid-card:active {
+  cursor: grabbing;
+}

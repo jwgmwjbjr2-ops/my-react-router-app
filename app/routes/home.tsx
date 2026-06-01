@@ -8,8 +8,35 @@ export function meta({}: Route.MetaArgs) {
   ];
 }
 
+// 1. Decrypt Text Component (ReactBits style)
+const DecryptText = ({ text }: { text: string }) => {
+  const [displayText, setDisplayText] = useState("");
+  
+  useEffect(() => {
+    const chars = "@#X%$&801!?";
+    let iterations = 0;
+    const interval = setInterval(() => {
+      setDisplayText(
+        text
+          .split("")
+          .map((letter, index) => {
+            if (index < iterations) return letter;
+            return chars[Math.floor(Math.random() * chars.length)];
+          })
+          .join("")
+      );
+      if (iterations >= text.length) clearInterval(interval);
+      iterations += 1 / 3;
+    }, 30);
+    return () => clearInterval(interval);
+  }, [text]);
+
+  return <>{displayText}</>;
+};
+
 export default function Home() {
   const [theme, setTheme] = useState("dark-theme");
+  const [partyMode, setPartyMode] = useState(false);
   
   // Guessing Game State
   const [guess, setGuess] = useState(0);
@@ -40,10 +67,14 @@ export default function Home() {
   const [calcOp, setCalcOp] = useState<string | null>(null);
   const [waitingForNewValue, setWaitingForNewValue] = useState(false);
 
-  // Theme Toggler
+  // RFID Scanner State
+  const [isScannerUnlocked, setIsScannerUnlocked] = useState(false);
+  const [isDragOver, setIsDragOver] = useState(false);
+
+  // Theme & Party Mode Effect
   useEffect(() => {
-    document.body.className = theme;
-  }, [theme]);
+    document.body.className = `${theme} ${partyMode ? "party-mode" : ""}`;
+  }, [theme, partyMode]);
 
   const toggleTheme = () => {
     setTheme(prev => prev === "dark-theme" ? "light-theme" : "dark-theme");
@@ -83,10 +114,20 @@ export default function Home() {
     } else if (calcOp) {
       const currentValue = calcValue || 0;
       let newValue = currentValue;
+      
       if (calcOp === "+") newValue = currentValue + inputValue;
       else if (calcOp === "-") newValue = currentValue - inputValue;
       else if (calcOp === "*") newValue = currentValue * inputValue;
-      else if (calcOp === "/") newValue = currentValue / inputValue;
+      else if (calcOp === "/") {
+        if (inputValue === 0) {
+          setCalcDisplay("Universe implosion prevented.");
+          setWaitingForNewValue(true);
+          setCalcOp(null);
+          setCalcValue(null);
+          return;
+        }
+        newValue = currentValue / inputValue;
+      }
       
       setCalcValue(newValue);
       setCalcDisplay(String(newValue));
@@ -101,6 +142,14 @@ export default function Home() {
     setCalcValue(null);
     setCalcOp(null);
     setWaitingForNewValue(false);
+  };
+
+  const convertToBinary = () => {
+    const num = parseInt(calcDisplay, 10);
+    if (!isNaN(num)) {
+      setCalcDisplay(num.toString(2));
+      setWaitingForNewValue(true);
+    }
   };
 
   const PlaceholderList = () => (
@@ -122,7 +171,10 @@ export default function Home() {
     <>
       <nav>
         <h2 style={{ margin: 0 }}>Smart Jukebox Team</h2>
-        <div className="nav-links">
+        <div className="nav-links" style={{ display: "flex", gap: "1rem" }}>
+          <button className="theme-btn" onClick={() => setPartyMode(!partyMode)} style={{ background: partyMode ? "#ff00ff" : "var(--accent-1)" }}>
+            {partyMode ? "STOP PANIC" : "PARTY MODE"}
+          </button>
           <button className="theme-btn" onClick={toggleTheme}>
             {theme === "dark-theme" ? "LIGHT MODE" : "DARK MODE"}
           </button>
@@ -132,13 +184,16 @@ export default function Home() {
       <main className="container">
         
         <section>
-          <h2 className="project-header" style={{ marginTop: "2rem" }}>The Team</h2>
+          <h2 className="project-header" style={{ marginTop: "2rem" }}>
+            {partyMode ? "THE ROCKSTARS" : "The Team"}
+          </h2>
           <div className="parts-grid" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))" }}>
+            
             <div className="part-card">
               <div className="avatar-box" style={{ width: "120px", margin: "0 auto 1.5rem", boxShadow: "8px 8px 0px var(--accent-1)" }}>
                 <img src="/avatar_niklas_new.png" alt="Niklas Avatar" />
               </div>
-              <h3 style={{ textAlign: "center" }}>Niklas</h3>
+              <h3 style={{ textAlign: "center" }}><DecryptText text="Niklas" /></h3>
               <div style={{ marginTop: "1rem", fontSize: "0.95rem" }}>
                 <p><strong>About:</strong> Someone that thinks in systems and speaks in questions. Building, always curious with a quiet intensity that makes ordinary feel like it's hiding something worth discovering.</p>
                 <p style={{ marginTop: "1rem" }}><strong>Hobbies:</strong> Friends 🍻, Tech 💻, AI 🤖, Skiing ⛷️</p>
@@ -146,11 +201,12 @@ export default function Home() {
                 <p style={{ marginTop: "1rem" }}><strong>Fun Fact:</strong> Likes to burn through tokens 🔥</p>
               </div>
             </div>
+            
             <div className="part-card">
               <div className="avatar-box" style={{ width: "120px", margin: "0 auto 1.5rem", background: "var(--accent-2)", boxShadow: "8px 8px 0px var(--accent-1)" }}>
                 <img src="/avatar_liam.png" alt="Liam Avatar" />
               </div>
-              <h3 style={{ textAlign: "center" }}>Liam</h3>
+              <h3 style={{ textAlign: "center" }}><DecryptText text="Liam" /></h3>
               <div style={{ marginTop: "1rem", fontSize: "0.95rem" }}>
                 <p><strong>About:</strong> Full-stack enthusiast who turns caffeine into clean code. Always looking for the next big wave.</p>
                 <p style={{ marginTop: "1rem" }}><strong>Hobbies:</strong> Programming 👨‍💻, Kitesurfing 🪁, Volleyball 🏐</p>
@@ -158,11 +214,12 @@ export default function Home() {
                 <p style={{ marginTop: "1rem" }}><strong>Fun Fact:</strong> Can debug CSS without crying 🎯</p>
               </div>
             </div>
+            
             <div className="part-card">
               <div className="avatar-box" style={{ width: "120px", margin: "0 auto 1.5rem", background: "var(--accent-3)", boxShadow: "8px 8px 0px var(--accent-1)" }}>
                 <img src="/avatar_arda.png" alt="Arda Avatar" />
               </div>
-              <h3 style={{ textAlign: "center" }}>Arda</h3>
+              <h3 style={{ textAlign: "center" }}><DecryptText text="Arda" /></h3>
               <div style={{ marginTop: "1rem", fontSize: "0.95rem" }}>
                 <p><strong>About:</strong> A generational coding talent fully dedicated to the craft, turning complex problems into elegant solutions with unwavering focus.</p>
                 <p style={{ marginTop: "1rem" }}><strong>Hobbies:</strong> Gaming 🎮</p>
@@ -171,6 +228,7 @@ export default function Home() {
                 <p style={{ marginTop: "1rem" }}><strong>Fun Fact:</strong> Learned coding when I was 7</p>
               </div>
             </div>
+
           </div>
         </section>
 
@@ -180,6 +238,9 @@ export default function Home() {
             RFID-triggered music & mood lighting. Tap a card — it recognises you, plays your song, and pulses the room in colour for every note. No apps, no screens. Just hardware.
           </p>
 
+          <div style={{ marginBottom: "2rem" }}>
+            <img src="/jukebox_hero.png" alt="Smart Jukebox functionality" style={{ width: "100%", border: "var(--border-width) solid var(--border-color)", boxShadow: "12px 12px 0px var(--accent-1)", background: "#000" }} />
+          </div>
           <div className="video-wrapper">
             <video controls autoPlay loop muted>
               <source src="/jukebox_demo.mp4" type="video/mp4" />
@@ -218,6 +279,55 @@ export default function Home() {
 
         <h2 className="project-header" style={{ marginTop: "6rem" }}>Playground</h2>
         
+        {/* RFID VIRTUAL SCANNER */}
+        <div style={{ display: "flex", gap: "2rem", marginBottom: "4rem", flexWrap: "wrap" }}>
+          <div style={{ flex: 1 }}>
+            <h3 style={{ marginBottom: "1rem" }}>Scan Authorization Card</h3>
+            <p style={{ marginBottom: "1rem" }}>Drag the card onto the scanner to unlock the Jukebox control panel.</p>
+            
+            <div 
+              draggable 
+              className="rfid-card" 
+              onDragStart={(e) => {
+                e.dataTransfer.setData("text/plain", "rfid-card");
+              }}
+            >
+              <span style={{ fontSize: "3rem" }}>🪪</span>
+              <span>MASTER CARD</span>
+            </div>
+          </div>
+
+          <div style={{ flex: 2 }}>
+            <div 
+              className={`rfid-scanner ${isDragOver ? "drag-over" : ""}`}
+              onDragOver={(e) => {
+                e.preventDefault();
+                setIsDragOver(true);
+              }}
+              onDragLeave={() => setIsDragOver(false)}
+              onDrop={(e) => {
+                e.preventDefault();
+                setIsDragOver(false);
+                if (e.dataTransfer.getData("text/plain") === "rfid-card") {
+                  setIsScannerUnlocked(true);
+                }
+              }}
+            >
+              {isScannerUnlocked ? (
+                <>
+                  <span style={{ fontSize: "4rem", marginBottom: "1rem" }}>✅</span>
+                  <h3 style={{ color: "var(--accent-1)" }}>ACCESS GRANTED: SYSTEM OVERRIDE INITIATED</h3>
+                </>
+              ) : (
+                <>
+                  <span style={{ fontSize: "4rem", marginBottom: "1rem", opacity: 0.5 }}>📡</span>
+                  <h3>DROP CARD HERE TO SCAN</h3>
+                </>
+              )}
+            </div>
+          </div>
+        </div>
+
         <div className="brutal-card interactive" style={{ textAlign: "center" }}>
           <h3 style={{ marginBottom: "1rem" }}>Guess the BOM Cost (€)</h3>
           <p style={{ marginBottom: "1rem", color: "var(--accent-1)", fontWeight: "bold" }}>{gameMessage}</p>
@@ -269,7 +379,7 @@ export default function Home() {
 
           {/* CALCULATOR */}
           <div className="brutal-card interactive">
-            <h3 style={{ marginBottom: "1rem" }}>Calc</h3>
+            <h3 style={{ marginBottom: "1rem" }}>Snarky Calc</h3>
             <div className="calc-display">{calcDisplay}</div>
             
             <div className="calc-grid">
@@ -294,6 +404,8 @@ export default function Home() {
               
               <button className="c-btn" onClick={() => inputDigit("0")} style={{ gridColumn: "span 2" }}>0</button>
               <button className="c-btn" onClick={() => inputDigit(".")}>.</button>
+              
+              <button className="brutal-btn" onClick={convertToBinary} style={{ gridColumn: "span 4", marginTop: "1rem" }}>Convert to BINARY</button>
             </div>
           </div>
 
