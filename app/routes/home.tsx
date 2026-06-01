@@ -122,16 +122,26 @@ export default function Home() {
           <div className="parts-grid" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))" }}>
             <div className="part-card">
               <div className="avatar-box" style={{ width: "120px", margin: "0 auto 1.5rem", boxShadow: "8px 8px 0px var(--accent-1)" }}>
-                <img src="/avatar_niklas.png" alt="Dr. Niklas Avatar" />
+                <img src="/avatar_niklas_new.png" alt="Niklas Avatar" />
               </div>
-              <h3 style={{ textAlign: "center" }}>Dr. Niklas</h3>
-              <PlaceholderList />
+              <h3 style={{ textAlign: "center" }}>Niklas</h3>
+              <div style={{ marginTop: "1rem", fontSize: "0.95rem" }}>
+                <p><strong>About:</strong> Someone that thinks in systems and speaks in questions. Building, always curious with a quiet intensity that makes ordinary feel like it's hiding something worth discovering.</p>
+                <p style={{ marginTop: "1rem" }}><strong>Hobbies:</strong> Freunde 🍻, Technik 💻, AI 🤖, Skifahren ⛷️</p>
+                <p style={{ marginTop: "1rem" }}><strong>Fun Fact:</strong> Likes to burn through tokens 🔥</p>
+              </div>
             </div>
             <div className="part-card">
               <div className="avatar-box" style={{ width: "120px", margin: "0 auto 1.5rem", background: "var(--accent-2)", boxShadow: "8px 8px 0px var(--accent-1)" }}>
+                <img src="/avatar_liam.png" alt="Liam Avatar" />
               </div>
-              <h3 style={{ textAlign: "center" }}>Dev 1</h3>
-              <PlaceholderList />
+              <h3 style={{ textAlign: "center" }}>Liam</h3>
+              <div style={{ marginTop: "1rem", fontSize: "0.95rem" }}>
+                <p><strong>About:</strong> Full-stack enthusiast who turns caffeine into clean code. Always looking for the next big wave.</p>
+                <p style={{ marginTop: "1rem" }}><strong>Hobbies:</strong> Programmieren 👨‍💻, Kitesurfen 🪁, Volleyball 🏐</p>
+                <p style={{ marginTop: "1rem" }}><strong>Social:</strong> <a href="https://www.linkedin.com/in/liam-bargmann-102147369/" target="_blank" rel="noreferrer" style={{color: "var(--accent-2)", fontWeight: "bold"}}>LinkedIn</a></p>
+                <p style={{ marginTop: "1rem" }}><strong>Fun Fact:</strong> Can debug CSS without crying 🎯</p>
+              </div>
             </div>
             <div className="part-card">
               <div className="avatar-box" style={{ width: "120px", margin: "0 auto 1.5rem", background: "var(--accent-3)", boxShadow: "8px 8px 0px var(--accent-1)" }}>
