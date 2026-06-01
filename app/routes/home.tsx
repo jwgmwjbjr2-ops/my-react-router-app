@@ -145,9 +145,16 @@ export default function Home() {
             </div>
             <div className="part-card">
               <div className="avatar-box" style={{ width: "120px", margin: "0 auto 1.5rem", background: "var(--accent-3)", boxShadow: "8px 8px 0px var(--accent-1)" }}>
+                <img src="/avatar_arda.png" alt="Arda Avatar" />
               </div>
-              <h3 style={{ textAlign: "center" }}>Dev 2</h3>
-              <PlaceholderList />
+              <h3 style={{ textAlign: "center" }}>Arda</h3>
+              <div style={{ marginTop: "1rem", fontSize: "0.95rem" }}>
+                <p><strong>About:</strong> A generational coding talent fully dedicated to the craft, turning complex problems into elegant solutions with unwavering focus.</p>
+                <p style={{ marginTop: "1rem" }}><strong>Hobbies:</strong> Gaming 🎮</p>
+                <p style={{ marginTop: "1rem" }}><strong>Social:</strong> <a href="#" target="_blank" rel="noreferrer" style={{color: "var(--accent-3)", fontWeight: "bold"}}>LinkedIn</a> | <a href="#" target="_blank" rel="noreferrer" style={{color: "var(--accent-3)", fontWeight: "bold"}}>Instagram</a></p>
+                <p style={{ marginTop: "1rem" }}><strong>Emojis:</strong> 🏀 😴 😡</p>
+                <p style={{ marginTop: "1rem" }}><strong>Fun Fact:</strong> Learned coding when I was 7</p>
+              </div>
             </div>
           </div>
         </section>
