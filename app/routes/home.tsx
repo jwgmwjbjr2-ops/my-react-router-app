@@ -1,13 +1,249 @@
 import type { Route } from "./+types/home";
-import { Welcome } from "../welcome/welcome";
+import { useState, useEffect } from "react";
 
 export function meta({}: Route.MetaArgs) {
   return [
-    { title: "New React Router App" },
-    { name: "description", content: "Welcome to React Router!" },
+    { title: "Dr. Niklas - Developer Portfolio" },
+    { name: "description", content: "Niklas's portfolio and hardware projects." },
   ];
 }
 
 export default function Home() {
-  return <Welcome />;
+  const [theme, setTheme] = useState("dark-theme");
+  const [count, setCount] = useState(0);
+  
+  // Todo List State
+  const [todos, setTodos] = useState([
+    { id: 1, text: "Build the Smart Jukebox", completed: true },
+    { id: 2, text: "Write less generic copy", completed: true },
+    { id: 3, text: "Go skiing", completed: false }
+  ]);
+  const [newTodo, setNewTodo] = useState("");
+
+  // Calculator State
+  const [calcDisplay, setCalcDisplay] = useState("0");
+  const [calcValue, setCalcValue] = useState<number | null>(null);
+  const [calcOp, setCalcOp] = useState<string | null>(null);
+  const [waitingForNewValue, setWaitingForNewValue] = useState(false);
+
+  // Theme Toggler
+  useEffect(() => {
+    document.body.className = theme;
+  }, [theme]);
+
+  const toggleTheme = () => {
+    setTheme(prev => prev === "dark-theme" ? "light-theme" : "dark-theme");
+  };
+
+  // Todo Handlers
+  const addTodo = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newTodo.trim()) return;
+    setTodos([...todos, { id: Date.now(), text: newTodo, completed: false }]);
+    setNewTodo("");
+  };
+
+  const toggleTodo = (id: number) => {
+    setTodos(todos.map(t => t.id === id ? { ...t, completed: !t.completed } : t));
+  };
+
+  const deleteTodo = (id: number) => {
+    setTodos(todos.filter(t => t.id !== id));
+  };
+
+  // Calculator Handlers
+  const inputDigit = (digit: string) => {
+    if (waitingForNewValue) {
+      setCalcDisplay(digit);
+      setWaitingForNewValue(false);
+    } else {
+      setCalcDisplay(calcDisplay === "0" ? digit : calcDisplay + digit);
+    }
+  };
+
+  const performOperation = (nextOp: string) => {
+    const inputValue = parseFloat(calcDisplay);
+    
+    if (calcValue == null) {
+      setCalcValue(inputValue);
+    } else if (calcOp) {
+      const currentValue = calcValue || 0;
+      let newValue = currentValue;
+      if (calcOp === "+") newValue = currentValue + inputValue;
+      else if (calcOp === "-") newValue = currentValue - inputValue;
+      else if (calcOp === "*") newValue = currentValue * inputValue;
+      else if (calcOp === "/") newValue = currentValue / inputValue;
+      
+      setCalcValue(newValue);
+      setCalcDisplay(String(newValue));
+    }
+    
+    setWaitingForNewValue(true);
+    setCalcOp(nextOp);
+  };
+
+  const clearCalc = () => {
+    setCalcDisplay("0");
+    setCalcValue(null);
+    setCalcOp(null);
+    setWaitingForNewValue(false);
+  };
+
+  return (
+    <>
+      <nav>
+        <h2 style={{ margin: 0 }}>Dr. Niklas</h2>
+        <div className="nav-links">
+          <button className="theme-btn" onClick={toggleTheme}>
+            {theme === "dark-theme" ? "LIGHT MODE" : "DARK MODE"}
+          </button>
+        </div>
+      </nav>
+
+      <main className="container">
+        
+        <section className="hero-grid">
+          <div className="avatar-box">
+            <img src="/avatar_niklas.png" alt="Niklas Avatar" />
+          </div>
+          <div className="hero-content">
+            <h1>Dr. Niklas</h1>
+            <p style={{ fontSize: "1.2rem", fontWeight: "bold" }}>
+              Tech. Friends. Skiing.
+            </p>
+            <p style={{ marginTop: "1rem" }}>
+              Not your average AI-generated bio. I build hardware, write code, and hit the slopes. 
+              Here is a jukebox I built when I was bored.
+            </p>
+            <div className="pills">
+              <span className="pill">Developer</span>
+              <span className="pill">Hardware</span>
+            </div>
+            <div style={{ marginTop: "2rem" }}>
+              <a href="https://github.com/jwgmwjbjr2-ops/my-react-router-app" target="_blank" rel="noreferrer">
+                <button className="brutal-btn">GitHub Repo</button>
+              </a>
+            </div>
+          </div>
+        </section>
+
+        <section>
+          <h2 className="project-header">Project 01: Smart Jukebox</h2>
+          <p style={{ marginBottom: "2rem", maxWidth: "700px" }}>
+            RFID-triggered music & mood lighting. Tap a card — it recognises you, plays your song, and pulses the room in colour for every note. No apps, no screens. Just hardware.
+          </p>
+
+          <div className="video-wrapper">
+            <video controls autoPlay loop muted>
+              <source src="/jukebox_demo.mp4" type="video/mp4" />
+            </video>
+          </div>
+
+          <h3 style={{ marginBottom: "1.5rem" }}>BOM (Bill of Materials)</h3>
+          <div className="parts-grid">
+            <div className="part-card">
+              <h4>Arduino UNO</h4>
+              <p>The brain. Runs the state machine, coordinates SPI for RFID, tone output, and PWM LEDs.</p>
+            </div>
+            <div className="part-card">
+              <h4>MFRC522 RFID</h4>
+              <p>Reads card UIDs at 13.56 MHz over SPI. Each UID maps to a song.</p>
+            </div>
+            <div className="part-card">
+              <h4>KY-023 Joystick</h4>
+              <p>Dual-axis analog input (X = tempo, Y = brightness) + pause button.</p>
+            </div>
+            <div className="part-card">
+              <h4>Piezo Buzzer</h4>
+              <p>Generates 8-bit melodies. Mario, Tetris, ABBA. You name it.</p>
+            </div>
+            <div className="part-card">
+              <h4>RGB LED</h4>
+              <p>PWM colour pulse for every note. Synchronised light show.</p>
+            </div>
+          </div>
+        </section>
+
+        <h2 className="project-header" style={{ marginTop: "6rem" }}>Playground</h2>
+        
+        <div className="brutal-card interactive" style={{ textAlign: "center" }}>
+          <h3 style={{ marginBottom: "1rem" }}>Stateful Counter</h3>
+          <button className="brutal-btn" onClick={() => setCount(c => c - 1)}>-</button>
+          <span style={{ fontSize: "2rem", margin: "0 2rem", fontWeight: "bold" }}>{count}</span>
+          <button className="brutal-btn" onClick={() => setCount(c => c + 1)}>+</button>
+        </div>
+
+        <div className="interactive-grid">
+          
+          {/* TODO LIST */}
+          <div className="brutal-card interactive">
+            <h3 style={{ marginBottom: "1rem" }}>Tasks</h3>
+            <form onSubmit={addTodo} style={{ display: "flex", gap: "0.5rem", marginBottom: "1rem" }}>
+              <input 
+                type="text" 
+                className="brutal-input" 
+                placeholder="What next?" 
+                value={newTodo}
+                onChange={(e) => setNewTodo(e.target.value)}
+              />
+              <button type="submit" className="brutal-btn">Add</button>
+            </form>
+            
+            <div className="todo-list">
+              {todos.map(todo => (
+                <div key={todo.id} className={`todo-item ${todo.completed ? 'done' : ''}`}>
+                  <label style={{ cursor: "pointer", display: "flex", alignItems: "center", gap: "0.5rem" }}>
+                    <input 
+                      type="checkbox" 
+                      checked={todo.completed}
+                      onChange={() => toggleTodo(todo.id)}
+                    />
+                    {todo.text}
+                  </label>
+                  <button 
+                    onClick={() => deleteTodo(todo.id)}
+                    style={{ background: "none", border: "none", cursor: "pointer", fontSize: "1.2rem", color: "var(--accent-1)" }}
+                  >
+                    X
+                  </button>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* CALCULATOR */}
+          <div className="brutal-card interactive">
+            <h3 style={{ marginBottom: "1rem" }}>Calc</h3>
+            <div className="calc-display">{calcDisplay}</div>
+            
+            <div className="calc-grid">
+              <button className="c-btn" onClick={clearCalc}>C</button>
+              <button className="c-btn op" onClick={() => performOperation("/")}>/</button>
+              <button className="c-btn op" onClick={() => performOperation("*")}>*</button>
+              <button className="c-btn op" onClick={() => performOperation("-")}>-</button>
+              
+              <button className="c-btn" onClick={() => inputDigit("7")}>7</button>
+              <button className="c-btn" onClick={() => inputDigit("8")}>8</button>
+              <button className="c-btn" onClick={() => inputDigit("9")}>9</button>
+              <button className="c-btn op" onClick={() => performOperation("+")} style={{ gridRow: "span 2" }}>+</button>
+              
+              <button className="c-btn" onClick={() => inputDigit("4")}>4</button>
+              <button className="c-btn" onClick={() => inputDigit("5")}>5</button>
+              <button className="c-btn" onClick={() => inputDigit("6")}>6</button>
+              
+              <button className="c-btn" onClick={() => inputDigit("1")}>1</button>
+              <button className="c-btn" onClick={() => inputDigit("2")}>2</button>
+              <button className="c-btn" onClick={() => inputDigit("3")}>3</button>
+              <button className="c-btn eq" onClick={() => performOperation("=")} style={{ gridRow: "span 2" }}>=</button>
+              
+              <button className="c-btn" onClick={() => inputDigit("0")} style={{ gridColumn: "span 2" }}>0</button>
+              <button className="c-btn" onClick={() => inputDigit(".")}>.</button>
+            </div>
+          </div>
+
+        </div>
+
+      </main>
+    </>
+  );
 }
