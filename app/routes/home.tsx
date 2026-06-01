@@ -415,7 +415,7 @@ export default function Home() {
             </div>
           ) : (
             <div className="brutal-card interactive">
-              <h3 style={{ marginBottom: "1rem" }}>Snarky Calc</h3>
+              <h3 style={{ marginBottom: "1rem" }}>Arduino Calc</h3>
               <div className="calc-display">{calcDisplay}</div>
               
               <div className="calc-grid">
