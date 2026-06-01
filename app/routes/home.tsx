@@ -26,7 +26,7 @@ const DecryptText = ({ text }: { text: string }) => {
           .join("")
       );
       if (iterations >= text.length) clearInterval(interval);
-      iterations += 1 / 3;
+      iterations += 1 / 9;
     }, 30);
     return () => clearInterval(interval);
   }, [text]);
