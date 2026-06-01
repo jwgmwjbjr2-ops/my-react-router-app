@@ -10,7 +10,21 @@ export function meta({}: Route.MetaArgs) {
 
 export default function Home() {
   const [theme, setTheme] = useState("dark-theme");
-  const [count, setCount] = useState(0);
+  
+  // Guessing Game State
+  const [guess, setGuess] = useState(0);
+  const [gameMessage, setGameMessage] = useState("Guess the total cost of the Smart Jukebox parts!");
+  const actualCost = 20;
+
+  const handleGuess = () => {
+    if (guess === actualCost) {
+      setGameMessage("🎉 Spot on! It costs exactly €20.");
+    } else if (guess < actualCost) {
+      setGameMessage("Too low! Hardware isn't that cheap.");
+    } else {
+      setGameMessage("Too high! It's an Arduino, not a MacBook.");
+    }
+  };
   
   // Todo List State
   const [todos, setTodos] = useState([
@@ -205,10 +219,14 @@ export default function Home() {
         <h2 className="project-header" style={{ marginTop: "6rem" }}>Playground</h2>
         
         <div className="brutal-card interactive" style={{ textAlign: "center" }}>
-          <h3 style={{ marginBottom: "1rem" }}>Stateful Counter</h3>
-          <button className="brutal-btn" onClick={() => setCount(c => c - 1)}>-</button>
-          <span style={{ fontSize: "2rem", margin: "0 2rem", fontWeight: "bold" }}>{count}</span>
-          <button className="brutal-btn" onClick={() => setCount(c => c + 1)}>+</button>
+          <h3 style={{ marginBottom: "1rem" }}>Guess the BOM Cost (€)</h3>
+          <p style={{ marginBottom: "1rem", color: "var(--accent-1)", fontWeight: "bold" }}>{gameMessage}</p>
+          <div style={{ display: "flex", justifyContent: "center", alignItems: "center", gap: "1rem" }}>
+            <button className="brutal-btn" onClick={() => setGuess(g => Math.max(0, g - 1))}>-</button>
+            <span style={{ fontSize: "2.5rem", fontWeight: "bold", width: "80px" }}>€{guess}</span>
+            <button className="brutal-btn" onClick={() => setGuess(g => g + 1)}>+</button>
+          </div>
+          <button className="brutal-btn" style={{ marginTop: "1.5rem" }} onClick={handleGuess}>Submit Guess</button>
         </div>
 
         <div className="interactive-grid">
