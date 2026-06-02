@@ -1,5 +1,5 @@
 import type { Route } from "./+types/home";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -32,6 +32,90 @@ const DecryptText = ({ text }: { text: string }) => {
   }, [text]);
 
   return <>{displayText}</>;
+};
+
+const Bigfoot = ({ partyMode }: { partyMode: boolean }) => {
+  const [status, setStatus] = useState<"hidden" | "peeking" | "dancing" | "running">("hidden");
+  const [cooldown, setCooldown] = useState(false);
+  const lastScrollY = useRef(0);
+  const scrollAccumulator = useRef(0);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (partyMode || cooldown || status !== "hidden") return;
+      
+      const currentScroll = window.scrollY;
+      const diff = Math.abs(currentScroll - lastScrollY.current);
+      scrollAccumulator.current += diff;
+      lastScrollY.current = currentScroll;
+
+      // Appear frequently: every 300px of scrolling
+      if (scrollAccumulator.current > 300) {
+        scrollAccumulator.current = 0;
+        setStatus("peeking");
+        
+        // Peek for 2 seconds then run away
+        setTimeout(() => {
+          if (!partyMode) {
+            setStatus("running");
+            setTimeout(() => {
+              setStatus("hidden");
+              setCooldown(true);
+              // Short cooldown
+              setTimeout(() => setCooldown(false), 3000);
+            }, 600);
+          }
+        }, 2000);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [status, cooldown, partyMode]);
+
+  useEffect(() => {
+    if (partyMode) {
+      setStatus("dancing");
+    } else if (status === "dancing") {
+      setStatus("running");
+      setTimeout(() => setStatus("hidden"), 600);
+    }
+  }, [partyMode]);
+
+  const containerClass = `bigfoot-container ${status}`;
+
+  return (
+    <div className={containerClass}>
+      <div className="bigfoot">
+        <div className="sunglasses">
+            <svg viewBox="0 0 100 25" fill="black">
+                <rect x="10" y="5" width="35" height="15" />
+                <rect x="55" y="5" width="35" height="15" />
+                <rect x="45" y="10" width="10" height="5" />
+            </svg>
+        </div>
+        <svg className="bigfoot-svg" viewBox="0 0 64 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="16" y="12" width="32" height="38" fill="#4B2C20" />
+          <rect x="20" y="8" width="24" height="6" fill="#4B2C20" />
+          <rect x="12" y="20" width="4" height="22" fill="#4B2C20" />
+          <rect x="48" y="20" width="4" height="22" fill="#4B2C20" />
+          <rect x="24" y="18" width="4" height="4" fill="white" />
+          <rect x="36" y="18" width="4" height="4" fill="white" />
+          <rect x="25" y="19" width="2" height="2" fill="black" />
+          <rect x="37" y="19" width="2" height="2" fill="black" />
+          
+          <g className="leg leg-left">
+            <rect x="20" y="50" width="8" height="14" fill="#4B2C20" />
+            <rect x="16" y="64" width="12" height="4" fill="#4B2C20" />
+          </g>
+          <g className="leg leg-right">
+            <rect x="36" y="50" width="8" height="14" fill="#4B2C20" />
+            <rect x="36" y="64" width="12" height="4" fill="#4B2C20" />
+          </g>
+        </svg>
+      </div>
+    </div>
+  );
 };
 
 export default function Home() {
@@ -194,23 +278,9 @@ export default function Home() {
     }
   };
 
-  const PlaceholderList = () => (
-    <ul style={{ paddingLeft: "1.5rem", lineHeight: "1.6", marginTop: "1rem" }}>
-      <li>You will use this page to show yourself!</li>
-      <li>Names</li>
-      <li>Pictures</li>
-      <li>About me/us</li>
-      <li>Hobbys</li>
-      <li>Lists</li>
-      <li>URLs</li>
-      <li>Socials</li>
-      <li>Emojis</li>
-      <li>Be creative!</li>
-    </ul>
-  );
-
   return (
     <>
+      <Bigfoot partyMode={partyMode} />
       <nav>
         <h2 style={{ margin: 0 }}>Smart Jukebox Team</h2>
         <div className="nav-links" style={{ display: "flex", gap: "1rem" }}>
