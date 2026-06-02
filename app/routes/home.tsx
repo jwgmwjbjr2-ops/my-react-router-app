@@ -42,6 +42,22 @@ export default function Home() {
   const [guess, setGuess] = useState(0);
   const [gameMessage, setGameMessage] = useState("Guess the total cost of the Smart Jukebox parts!");
   const actualCost = 35;
+  const guessIntervalRef = useRef<NodeJS.Timeout | null>(null);
+
+  const startGuessChange = (amount: number) => {
+    setGuess(g => Math.max(0, g + amount));
+    if (guessIntervalRef.current) clearInterval(guessIntervalRef.current);
+    guessIntervalRef.current = setInterval(() => {
+      setGuess(g => Math.max(0, g + amount));
+    }, 100);
+  };
+
+  const stopGuessChange = () => {
+    if (guessIntervalRef.current) {
+      clearInterval(guessIntervalRef.current);
+      guessIntervalRef.current = null;
+    }
+  };
 
   const handleGuess = () => {
     if (guess === actualCost) {
@@ -412,10 +428,24 @@ export default function Home() {
             <div className="brutal-card interactive" style={{ textAlign: "center" }}>
               <h3 style={{ marginBottom: "1rem" }}>Guess the BOM Cost (€)</h3>
               <p style={{ marginBottom: "1rem", color: "var(--accent-1)", fontWeight: "bold" }}>{gameMessage}</p>
-              <div style={{ display: "flex", justifyContent: "center", alignItems: "center", gap: "1rem" }}>
-                <button className="brutal-btn" onClick={() => setGuess(g => Math.max(0, g - 1))}>-</button>
+              <div style={{ display: "flex", justifyContent: "center", alignItems: "center", gap: "1rem", userSelect: "none" }}>
+                <button 
+                  className="brutal-btn" 
+                  onMouseDown={() => startGuessChange(-1)} 
+                  onMouseUp={stopGuessChange} 
+                  onMouseLeave={stopGuessChange}
+                  onTouchStart={() => startGuessChange(-1)}
+                  onTouchEnd={stopGuessChange}
+                >-</button>
                 <span style={{ fontSize: "2.5rem", fontWeight: "bold", width: "80px" }}>€{guess}</span>
-                <button className="brutal-btn" onClick={() => setGuess(g => g + 1)}>+</button>
+                <button 
+                  className="brutal-btn" 
+                  onMouseDown={() => startGuessChange(1)} 
+                  onMouseUp={stopGuessChange} 
+                  onMouseLeave={stopGuessChange}
+                  onTouchStart={() => startGuessChange(1)}
+                  onTouchEnd={stopGuessChange}
+                >+</button>
               </div>
               <button className="brutal-btn" style={{ marginTop: "1.5rem" }} onClick={handleGuess}>Submit Guess</button>
             </div>
