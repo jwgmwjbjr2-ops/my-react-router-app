@@ -407,12 +407,6 @@ export default function Home() {
                         />
                         {todo.text}
                       </label>
-                      <button 
-                        onClick={() => deleteTodo(todo.id)}
-                        style={{ background: "none", border: "none", cursor: "pointer", fontSize: "1.2rem", color: "var(--accent-1)" }}
-                      >
-                        X
-                      </button>
                     </div>
                   ))}
                 </div>
