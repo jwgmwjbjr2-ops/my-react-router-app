@@ -1,5 +1,5 @@
 import type { Route } from "./+types/home";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -8,7 +8,6 @@ export function meta({}: Route.MetaArgs) {
   ];
 }
 
-// 1. Decrypt Text Component (ReactBits style)
 const DecryptText = ({ text }: { text: string }) => {
   const [displayText, setDisplayText] = useState("");
   
@@ -34,11 +33,94 @@ const DecryptText = ({ text }: { text: string }) => {
   return <>{displayText}</>;
 };
 
+const Bigfoot = ({ partyMode }: { partyMode: boolean }) => {
+  const [status, setStatus] = useState<"hidden" | "peeking" | "dancing" | "running">("hidden");
+  const [cooldown, setCooldown] = useState(false);
+  const lastScrollY = useRef(0);
+  const scrollAccumulator = useRef(0);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      // If we are already doing something or in cooldown, ignore
+      if (partyMode || cooldown || status !== "hidden") return;
+      
+      const currentScroll = window.scrollY;
+      const diff = Math.abs(currentScroll - lastScrollY.current);
+      scrollAccumulator.current += diff;
+      lastScrollY.current = currentScroll;
+
+      // Higher frequency: appear every 250px of total scroll distance
+      if (scrollAccumulator.current > 250) {
+        scrollAccumulator.current = 0;
+        setStatus("peeking");
+        
+        // Stay peeking for 2 seconds
+        setTimeout(() => {
+          if (!partyMode) {
+            setStatus("running");
+            // After running animation completes, hide
+            setTimeout(() => {
+              setStatus("hidden");
+              setCooldown(true);
+              // Small cooldown so he's not literally constant
+              setTimeout(() => setCooldown(false), 2000);
+            }, 600);
+          }
+        }, 2000);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [status, cooldown, partyMode]);
+
+  useEffect(() => {
+    if (partyMode) {
+      setStatus("dancing");
+    } else if (status === "dancing") {
+      setStatus("running");
+      setTimeout(() => setStatus("hidden"), 600);
+    }
+  }, [partyMode]);
+
+  return (
+    <div className={`bigfoot-container ${status}`}>
+      <div className="bigfoot">
+        <div className="sunglasses">
+            <svg viewBox="0 0 100 25" fill="black">
+                <rect x="10" y="5" width="35" height="15" />
+                <rect x="55" y="5" width="35" height="15" />
+                <rect x="45" y="10" width="10" height="5" />
+            </svg>
+        </div>
+        <svg className="bigfoot-svg" viewBox="0 0 64 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="16" y="12" width="32" height="38" fill="#4B2C20" />
+          <rect x="20" y="8" width="24" height="6" fill="#4B2C20" />
+          <rect x="12" y="20" width="4" height="22" fill="#4B2C20" />
+          <rect x="48" y="20" width="4" height="22" fill="#4B2C20" />
+          <rect x="24" y="18" width="4" height="4" fill="white" />
+          <rect x="36" y="18" width="4" height="4" fill="white" />
+          <rect x="25" y="19" width="2" height="2" fill="black" />
+          <rect x="37" y="19" width="2" height="2" fill="black" />
+          
+          <g className="leg leg-left">
+            <rect x="20" y="50" width="8" height="14" fill="#4B2C20" />
+            <rect x="16" y="64" width="12" height="4" fill="#4B2C20" />
+          </g>
+          <g className="leg leg-right">
+            <rect x="36" y="50" width="8" height="14" fill="#4B2C20" />
+            <rect x="36" y="64" width="12" height="4" fill="#4B2C20" />
+          </g>
+        </svg>
+      </div>
+    </div>
+  );
+};
+
 export default function Home() {
   const [theme, setTheme] = useState("dark-theme");
   const [partyMode, setPartyMode] = useState(false);
   
-  // Guessing Game State
   const [guess, setGuess] = useState(0);
   const [gameMessage, setGameMessage] = useState("Guess the total cost of the Smart Jukebox parts!");
   const actualCost = 35;
@@ -53,7 +135,6 @@ export default function Home() {
     }
   };
   
-  // Todo List State
   const [todos, setTodos] = useState([
     { id: 1, text: "Calculate 6 * 7 to find the meaning of life", completed: false },
     { id: 2, text: "Try dividing 1 by 0 (Warning: Void)", completed: false },
@@ -63,18 +144,15 @@ export default function Home() {
   ]);
   const [newTodo, setNewTodo] = useState("");
 
-  // Calculator State
   const [calcDisplay, setCalcDisplay] = useState("0");
   const [calcValue, setCalcValue] = useState<number | null>(null);
   const [calcOp, setCalcOp] = useState<string | null>(null);
   const [waitingForNewValue, setWaitingForNewValue] = useState(false);
   const [isExploded, setIsExploded] = useState(false);
 
-  // RFID Scanner State
   const [isScannerUnlocked, setIsScannerUnlocked] = useState(false);
   const [isDragOver, setIsDragOver] = useState(false);
 
-  // Theme & Party Mode Effect
   useEffect(() => {
     document.body.className = `${theme} ${partyMode ? "party-mode" : ""}`;
   }, [theme, partyMode]);
@@ -83,7 +161,6 @@ export default function Home() {
     setTheme(prev => prev === "dark-theme" ? "light-theme" : "dark-theme");
   };
 
-  // Todo Handlers
   const addTodo = (e: React.FormEvent) => {
     e.preventDefault();
     if (!newTodo.trim()) return;
@@ -99,7 +176,6 @@ export default function Home() {
     setTodos(todos.filter(t => t.id !== id));
   };
 
-  // Calculator Handlers
   const inputDigit = (digit: string) => {
     const hasLetters = /[a-zA-Z]/.test(calcDisplay);
     let newValueStr = "";
@@ -194,23 +270,9 @@ export default function Home() {
     }
   };
 
-  const PlaceholderList = () => (
-    <ul style={{ paddingLeft: "1.5rem", lineHeight: "1.6", marginTop: "1rem" }}>
-      <li>You will use this page to show yourself!</li>
-      <li>Names</li>
-      <li>Pictures</li>
-      <li>About me/us</li>
-      <li>Hobbys</li>
-      <li>Lists</li>
-      <li>URLs</li>
-      <li>Socials</li>
-      <li>Emojis</li>
-      <li>Be creative!</li>
-    </ul>
-  );
-
   return (
     <>
+      <Bigfoot partyMode={partyMode} />
       <nav>
         <h2 style={{ margin: 0 }}>Smart Jukebox Team</h2>
         <div className="nav-links" style={{ display: "flex", gap: "1rem" }}>
@@ -232,42 +294,35 @@ export default function Home() {
           <div className="parts-grid" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))" }}>
             
             <div className="part-card">
-              <div className="avatar-box" style={{ width: "120px", margin: "0 auto 1.5rem", boxShadow: "8px 8px 0px var(--accent-1)" }}>
+              <div className="avatar-box">
                 <img src="/avatar_niklas_new.png" alt="Niklas Avatar" />
               </div>
               <h3 style={{ textAlign: "center" }}><DecryptText text="Niklas" /></h3>
               <div style={{ marginTop: "1rem", fontSize: "0.95rem" }}>
-                <p><strong>About:</strong> Someone that thinks in systems and speaks in questions. Building, always curious with a quiet intensity that makes ordinary feel like it's hiding something worth discovering.</p>
-                <p style={{ marginTop: "1rem" }}><strong>Hobbies:</strong> Friends 🍻, Tech 💻, AI 🤖, Skiing ⛷️</p>
-                <p style={{ marginTop: "1rem" }}><strong>Social:</strong> <a href="https://www.linkedin.com/in/niklas-maximilian-milek-b2a277263/" target="_blank" rel="noreferrer" style={{color: "var(--accent-1)", fontWeight: "bold"}}>LinkedIn</a></p>
-                <p style={{ marginTop: "1rem" }}><strong>Fun Fact:</strong> Likes to burn through tokens 🔥</p>
+                <p><strong>About:</strong> Someone that thinks in systems and speaks in questions.</p>
+                <p style={{ marginTop: "1rem" }}><strong>Hobbies:</strong> Friends 🍻, Tech 💻, AI 🤖</p>
               </div>
             </div>
             
             <div className="part-card">
-              <div className="avatar-box" style={{ width: "120px", margin: "0 auto 1.5rem", background: "var(--accent-2)", boxShadow: "8px 8px 0px var(--accent-1)" }}>
+              <div className="avatar-box">
                 <img src="/avatar_liam.png" alt="Liam Avatar" />
               </div>
               <h3 style={{ textAlign: "center" }}><DecryptText text="Liam" /></h3>
               <div style={{ marginTop: "1rem", fontSize: "0.95rem" }}>
-                <p><strong>About:</strong> Full-stack enthusiast who turns caffeine into clean code. Always looking for the next big wave.</p>
-                <p style={{ marginTop: "1rem" }}><strong>Hobbies:</strong> Programming 👨‍💻, Kitesurfing 🪁, Volleyball 🏐</p>
-                <p style={{ marginTop: "1rem" }}><strong>Social:</strong> <a href="https://www.linkedin.com/in/liam-bargmann-102147369/" target="_blank" rel="noreferrer" style={{color: "var(--accent-2)", fontWeight: "bold"}}>LinkedIn</a></p>
-                <p style={{ marginTop: "1rem" }}><strong>Fun Fact:</strong> Can debug CSS without crying 🎯</p>
+                <p><strong>About:</strong> Full-stack enthusiast who turns caffeine into clean code.</p>
+                <p style={{ marginTop: "1rem" }}><strong>Hobbies:</strong> Programming 👨‍💻, Kitesurfing 🪁</p>
               </div>
             </div>
             
             <div className="part-card">
-              <div className="avatar-box" style={{ width: "120px", margin: "0 auto 1.5rem", background: "var(--accent-3)", boxShadow: "8px 8px 0px var(--accent-1)" }}>
+              <div className="avatar-box">
                 <img src="/avatar_arda.png" alt="Arda Avatar" />
               </div>
               <h3 style={{ textAlign: "center" }}><DecryptText text="Arda" /></h3>
               <div style={{ marginTop: "1rem", fontSize: "0.95rem" }}>
-                <p><strong>About:</strong> A generational coding talent fully dedicated to the craft, turning complex problems into elegant solutions with unwavering focus.</p>
+                <p><strong>About:</strong> A generational coding talent fully dedicated to the craft.</p>
                 <p style={{ marginTop: "1rem" }}><strong>Hobbies:</strong> Gaming 🎮</p>
-                <p style={{ marginTop: "1rem" }}><strong>Social:</strong> <a href="https://www.linkedin.com/in/arda-kulac-804a48331/" target="_blank" rel="noreferrer" style={{color: "var(--accent-3)", fontWeight: "bold"}}>LinkedIn</a> | <a href="#" target="_blank" rel="noreferrer" style={{color: "var(--accent-3)", fontWeight: "bold"}}>Instagram</a></p>
-                <p style={{ marginTop: "1rem" }}><strong>Emojis:</strong> 🏀 😴 😡</p>
-                <p style={{ marginTop: "1rem" }}><strong>Fun Fact:</strong> Learned coding when I was 7</p>
               </div>
             </div>
 
@@ -276,54 +331,18 @@ export default function Home() {
 
         <section>
           <h2 className="project-header" style={{ marginTop: "6rem" }}>Project: Smart Jukebox</h2>
-          <p style={{ marginBottom: "2rem", maxWidth: "700px" }}>
-            RFID-triggered music & mood lighting. Tap a card — it recognises you, plays your song, and pulses the room in colour for every note. No apps, no screens. Just hardware.
-          </p>
-
           <div className="video-wrapper">
             <video controls autoPlay loop muted>
               <source src="/jukebox_demo.mp4" type="video/mp4" />
             </video>
           </div>
-
-          <h3 style={{ marginBottom: "1.5rem" }}>BOM (Bill of Materials)</h3>
-          <div className="parts-grid">
-            <div className="part-card">
-              <img src="https://www.az-delivery.de/cdn/shop/products/mikrocontroller-board-lgt8f328p-mit-ch340-kompatibel-mit-arduino-ide-303972.jpg?v=1686855011&width=400" alt="Arduino UNO" style={{ width: "100%", border: "var(--border-width) solid var(--border-color)", marginBottom: "1rem", aspectRatio: "4/3", objectFit: "cover" }} />
-              <h4>Arduino UNO</h4>
-              <p>The brain. Runs the state machine, coordinates SPI for RFID, tone output, and PWM LEDs.</p>
-            </div>
-            <div className="part-card">
-              <img src="https://www.az-delivery.de/cdn/shop/products/rfid-kit-rc522-mit-reader-chip-und-card-fur-raspberry-pi-und-co-1356mhz-593133.jpg?v=1679399176&width=400" alt="MFRC522 RFID" style={{ width: "100%", border: "var(--border-width) solid var(--border-color)", marginBottom: "1rem", aspectRatio: "4/3", objectFit: "cover" }} />
-              <h4>MFRC522 RFID</h4>
-              <p>Reads card UIDs at 13.56 MHz over SPI. Each UID maps to a song.</p>
-            </div>
-            <div className="part-card">
-              <img src="https://www.az-delivery.de/cdn/shop/products/ky-023-joystick-modul-fur-uno-r3-501545.jpg?v=1679398844&width=400" alt="KY-023 Joystick" style={{ width: "100%", border: "var(--border-width) solid var(--border-color)", marginBottom: "1rem", aspectRatio: "4/3", objectFit: "cover" }} />
-              <h4>KY-023 Joystick</h4>
-              <p>Dual-axis analog input (X = tempo, Y = brightness) + pause button.</p>
-            </div>
-            <div className="part-card">
-              <img src="https://www.az-delivery.de/cdn/shop/products/ky-006-passiver-piezo-buzzer-alarm-modul-932847.jpg?v=1679398800&width=400" alt="Piezo Buzzer" style={{ width: "100%", border: "var(--border-width) solid var(--border-color)", marginBottom: "1rem", aspectRatio: "4/3", objectFit: "cover" }} />
-              <h4>Piezo Buzzer</h4>
-              <p>Generates 8-bit melodies. Mario, Tetris, ABBA. You name it.</p>
-            </div>
-            <div className="part-card">
-              <img src="https://www.az-delivery.de/cdn/shop/products/led-leuchtdioden-sortiment-kit-350-stuck-3mm-5mm-5-farben-864313.jpg?v=1679398918&width=400" alt="RGB LED" style={{ width: "100%", border: "var(--border-width) solid var(--border-color)", marginBottom: "1rem", aspectRatio: "4/3", objectFit: "cover" }} />
-              <h4>RGB LED</h4>
-              <p>PWM colour pulse for every note. Synchronised light show.</p>
-            </div>
-          </div>
         </section>
 
         <h2 className="project-header" style={{ marginTop: "6rem" }}>Playground</h2>
         
-        {/* RFID VIRTUAL SCANNER */}
         <div style={{ display: "flex", gap: "2rem", marginBottom: "4rem", flexWrap: "wrap" }}>
           <div style={{ flex: 1 }}>
             <h3 style={{ marginBottom: "1rem" }}>Scan Authorization Card</h3>
-            <p style={{ marginBottom: "1rem" }}>Drag the card onto the scanner to unlock the Jukebox control panel.</p>
-            
             <div 
               draggable 
               className="rfid-card" 
@@ -352,38 +371,14 @@ export default function Home() {
                 }
               }}
             >
-              {isScannerUnlocked ? (
-                <>
-                  <span style={{ fontSize: "4rem", marginBottom: "1rem" }}>✅</span>
-                  <h3 style={{ color: "var(--accent-1)" }}>ACCESS GRANTED: SYSTEM OVERRIDE INITIATED</h3>
-                </>
-              ) : (
-                <>
-                  <span style={{ fontSize: "4rem", marginBottom: "1rem", opacity: 0.5 }}>📡</span>
-                  <h3>DROP CARD HERE TO SCAN</h3>
-                </>
-              )}
+              {isScannerUnlocked ? <h3>ACCESS GRANTED</h3> : <h3>DROP CARD HERE</h3>}
             </div>
           </div>
         </div>
 
         {isScannerUnlocked && (
-          <>
-            <div className="brutal-card interactive" style={{ textAlign: "center" }}>
-              <h3 style={{ marginBottom: "1rem" }}>Guess the BOM Cost (€)</h3>
-              <p style={{ marginBottom: "1rem", color: "var(--accent-1)", fontWeight: "bold" }}>{gameMessage}</p>
-              <div style={{ display: "flex", justifyContent: "center", alignItems: "center", gap: "1rem" }}>
-                <button className="brutal-btn" onClick={() => setGuess(g => Math.max(0, g - 1))}>-</button>
-                <span style={{ fontSize: "2.5rem", fontWeight: "bold", width: "80px" }}>€{guess}</span>
-                <button className="brutal-btn" onClick={() => setGuess(g => g + 1)}>+</button>
-              </div>
-              <button className="brutal-btn" style={{ marginTop: "1.5rem" }} onClick={handleGuess}>Submit Guess</button>
-            </div>
-
-            <div className="interactive-grid">
-              
-              {/* TODO LIST */}
-              <div className="brutal-card interactive">
+          <div className="interactive-grid">
+              <div className="brutal-card">
                 <h3 style={{ marginBottom: "1rem" }}>Tasks</h3>
                 <form onSubmit={addTodo} style={{ display: "flex", gap: "0.5rem", marginBottom: "1rem" }}>
                   <input 
@@ -395,74 +390,26 @@ export default function Home() {
                   />
                   <button type="submit" className="brutal-btn">Add</button>
                 </form>
-                
-                <div className="todo-list">
-                  {todos.map(todo => (
-                    <div key={todo.id} className={`todo-item ${todo.completed ? 'done' : ''}`}>
-                      <label style={{ cursor: "pointer", display: "flex", alignItems: "center", gap: "0.5rem" }}>
-                        <input 
-                          type="checkbox" 
-                          checked={todo.completed}
-                          onChange={() => toggleTodo(todo.id)}
-                        />
-                        {todo.text}
-                      </label>
-                      <button 
-                        onClick={() => deleteTodo(todo.id)}
-                        style={{ background: "none", border: "none", cursor: "pointer", fontSize: "1.2rem", color: "var(--accent-1)" }}
-                      >
-                        X
-                      </button>
-                    </div>
-                  ))}
-                </div>
+                {todos.map(todo => (
+                  <div key={todo.id} className="todo-item">
+                    <span>{todo.text}</span>
+                    <button onClick={() => deleteTodo(todo.id)}>X</button>
+                  </div>
+                ))}
               </div>
 
-              {/* CALCULATOR */}
-              {isExploded ? (
-                <div className="brutal-card interactive" style={{ textAlign: "center", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", minHeight: "350px", animation: "partyShake 0.1s infinite" }}>
-                  <span style={{ fontSize: "6rem" }}>💥</span>
-                  <h2>BOOM!</h2>
-                  <p>You crashed the Arduino.</p>
-                  <button className="brutal-btn" style={{ marginTop: "1rem" }} onClick={() => { setIsExploded(false); clearCalc(); }}>Reboot System</button>
+              <div className="brutal-card">
+                <h3 style={{ marginBottom: "1rem" }}>Arduino Calc</h3>
+                <div className="calc-display">{calcDisplay}</div>
+                <div className="calc-grid">
+                  <button className="c-btn" onClick={() => inputDigit("1")}>1</button>
+                  <button className="c-btn" onClick={() => inputDigit("2")}>2</button>
+                  <button className="c-btn op" onClick={() => performOperation("+")}>+</button>
+                  <button className="c-btn op" onClick={() => performOperation("=")}>=</button>
                 </div>
-              ) : (
-                <div className="brutal-card interactive">
-                  <h3 style={{ marginBottom: "1rem" }}>Arduino Calc</h3>
-                  <div className="calc-display">{calcDisplay}</div>
-                  
-                  <div className="calc-grid">
-                    <button className="c-btn" onClick={clearCalc}>C</button>
-                    <button className="c-btn op" onClick={() => performOperation("/")}>/</button>
-                    <button className="c-btn op" onClick={() => performOperation("*")}>*</button>
-                    <button className="c-btn op" onClick={() => performOperation("-")}>-</button>
-                    
-                    <button className="c-btn" onClick={() => inputDigit("7")}>7</button>
-                    <button className="c-btn" onClick={() => inputDigit("8")}>8</button>
-                    <button className="c-btn" onClick={() => inputDigit("9")}>9</button>
-                    <button className="c-btn op" onClick={() => performOperation("+")} style={{ gridRow: "span 2" }}>+</button>
-                    
-                    <button className="c-btn" onClick={() => inputDigit("4")}>4</button>
-                    <button className="c-btn" onClick={() => inputDigit("5")}>5</button>
-                    <button className="c-btn" onClick={() => inputDigit("6")}>6</button>
-                    
-                    <button className="c-btn" onClick={() => inputDigit("1")}>1</button>
-                    <button className="c-btn" onClick={() => inputDigit("2")}>2</button>
-                    <button className="c-btn" onClick={() => inputDigit("3")}>3</button>
-                    <button className="c-btn eq" onClick={() => performOperation("=")} style={{ gridRow: "span 2" }}>=</button>
-                    
-                    <button className="c-btn" onClick={() => inputDigit("0")} style={{ gridColumn: "span 2" }}>0</button>
-                    <button className="c-btn" onClick={() => inputDigit(".")}>.</button>
-                    
-                    <button className="brutal-btn" onClick={convertToBinary} style={{ gridColumn: "span 4", marginTop: "1rem" }}>Convert to BINARY</button>
-                  </div>
-                </div>
-              )}
-
-            </div>
-          </>
+              </div>
+          </div>
         )}
-
       </main>
     </>
   );
