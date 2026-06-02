@@ -1,5 +1,5 @@
 import type { Route } from "./+types/home";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -70,6 +70,10 @@ export default function Home() {
   const [waitingForNewValue, setWaitingForNewValue] = useState(false);
   const [isExploded, setIsExploded] = useState(false);
 
+  // Audio Context Ref for Piezo buzzer
+  const audioCtxRef = useRef<any>(null);
+  const intervalRef = useRef<NodeJS.Timeout | null>(null);
+
   // RFID Scanner State
   const [isScannerUnlocked, setIsScannerUnlocked] = useState(false);
   const [isDragOver, setIsDragOver] = useState(false);
@@ -78,6 +82,42 @@ export default function Home() {
   useEffect(() => {
     document.body.className = `${theme} ${partyMode ? "party-mode" : ""}`;
   }, [theme, partyMode]);
+
+  const togglePartyMode = () => {
+    const newMode = !partyMode;
+    setPartyMode(newMode);
+
+    if (newMode) {
+      const AudioContextClass = window.AudioContext || (window as any).webkitAudioContext;
+      if (!audioCtxRef.current) {
+        audioCtxRef.current = new AudioContextClass();
+      }
+      if (audioCtxRef.current.state === "suspended") {
+        audioCtxRef.current.resume();
+      }
+
+      intervalRef.current = setInterval(() => {
+        if (!audioCtxRef.current) return;
+        const ctx = audioCtxRef.current;
+        const osc = ctx.createOscillator();
+        const gainNode = ctx.createGain();
+        osc.connect(gainNode);
+        gainNode.connect(ctx.destination);
+        
+        osc.type = "square"; // Authentic Piezo Sound
+        const notes = [261.6, 293.7, 329.6, 392.0, 440.0, 523.3, 587.3, 659.3]; // C Major scale
+        osc.frequency.setValueAtTime(notes[Math.floor(Math.random() * notes.length)], ctx.currentTime);
+        
+        gainNode.gain.setValueAtTime(0.05, ctx.currentTime); // Keep volume low
+        gainNode.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.1);
+        
+        osc.start(ctx.currentTime);
+        osc.stop(ctx.currentTime + 0.1);
+      }, 150); // 150ms per beep for techno speed
+    } else {
+      if (intervalRef.current) clearInterval(intervalRef.current);
+    }
+  };
 
   const toggleTheme = () => {
     setTheme(prev => prev === "dark-theme" ? "light-theme" : "dark-theme");
@@ -214,7 +254,7 @@ export default function Home() {
       <nav>
         <h2 style={{ margin: 0 }}>Smart Jukebox Team</h2>
         <div className="nav-links" style={{ display: "flex", gap: "1rem" }}>
-          <button className="theme-btn" onClick={() => setPartyMode(!partyMode)} style={{ background: partyMode ? "#ff00ff" : "var(--accent-1)" }}>
+          <button className="theme-btn" onClick={togglePartyMode} style={{ background: partyMode ? "#ff00ff" : "var(--accent-1)" }}>
             {partyMode ? "STOP PANIC" : "PARTY MODE"}
           </button>
           <button className="theme-btn" onClick={toggleTheme}>
