@@ -37,6 +37,7 @@ const DecryptText = ({ text }: { text: string }) => {
 const Bigfoot = ({ partyMode }: { partyMode: boolean }) => {
   const [status, setStatus] = useState<"hidden" | "peeking" | "dancing" | "running">("hidden");
   const [cooldown, setCooldown] = useState(false);
+  const [msg, setMsg] = useState("Pssst... did you run npm install?");
   const lastScrollY = useRef(0);
   const scrollAccumulator = useRef(0);
 
@@ -52,6 +53,8 @@ const Bigfoot = ({ partyMode }: { partyMode: boolean }) => {
       // Appear frequently: every 300px of scrolling
       if (scrollAccumulator.current > 300) {
         scrollAccumulator.current = 0;
+        const messages = ["Pssst... did you run npm install?", "I'm not a bug, I'm a feature.", "Stop scrolling, it's making me dizzy.", "404 Bigfoot Not Found.", "I'm powered by an Arduino."];
+        setMsg(messages[Math.floor(Math.random() * messages.length)]);
         setStatus("peeking");
         
         // Peek for 2 seconds then run away
@@ -86,7 +89,26 @@ const Bigfoot = ({ partyMode }: { partyMode: boolean }) => {
 
   return (
     <div className={containerClass}>
-      <div className="bigfoot">
+      <div className="bigfoot" onClick={() => { if(status === "peeking") setStatus("running"); }} style={{ cursor: status === "peeking" ? "pointer" : "default" }}>
+        {status === "peeking" && (
+          <div className="speech-bubble" style={{
+            position: "absolute",
+            bottom: "90%",
+            left: "50%",
+            transform: "translateX(-50%)",
+            background: "white",
+            color: "black",
+            padding: "0.5rem 1rem",
+            border: "4px solid black",
+            fontWeight: "bold",
+            whiteSpace: "nowrap",
+            marginBottom: "10px",
+            boxShadow: "4px 4px 0 black",
+            zIndex: 100
+          }}>
+            {msg}
+          </div>
+        )}
         <div className="sunglasses">
             <svg viewBox="0 0 100 25" fill="black">
                 <rect x="10" y="5" width="35" height="15" />
@@ -477,12 +499,6 @@ export default function Home() {
                         />
                         {todo.text}
                       </label>
-                      <button 
-                        onClick={() => deleteTodo(todo.id)}
-                        style={{ background: "none", border: "none", cursor: "pointer", fontSize: "1.2rem", color: "var(--accent-1)" }}
-                      >
-                        X
-                      </button>
                     </div>
                   ))}
                 </div>
