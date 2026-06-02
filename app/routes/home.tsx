@@ -101,7 +101,10 @@ const Bigfoot = ({ partyMode }: { partyMode: boolean }) => {
             padding: "0.5rem 1rem",
             border: "4px solid black",
             fontWeight: "bold",
-            whiteSpace: "nowrap",
+            whiteSpace: "normal",
+            maxWidth: "200px",
+            textAlign: "center",
+            wordWrap: "break-word",
             marginBottom: "10px",
             boxShadow: "4px 4px 0 black",
             zIndex: 100
@@ -117,22 +120,24 @@ const Bigfoot = ({ partyMode }: { partyMode: boolean }) => {
             </svg>
         </div>
         <svg className="bigfoot-svg" viewBox="0 0 64 80" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <rect x="16" y="12" width="32" height="38" fill="#4B2C20" />
-          <rect x="20" y="8" width="24" height="6" fill="#4B2C20" />
-          <rect x="12" y="20" width="4" height="22" fill="#4B2C20" />
-          <rect x="48" y="20" width="4" height="22" fill="#4B2C20" />
+          <path d="M24 4 h16 v4 h4 v4 h4 v16 h4 v16 h-4 v4 h-4 v8 h-4 v4 H24 v-4 h-4 v-8 h-4 v-4 h-4 v-16 h4 v-16 h4 v-4 h4 z" fill="#4B2C20" />
+          <rect x="24" y="16" width="16" height="12" fill="#8B5A40" />
           <rect x="24" y="18" width="4" height="4" fill="white" />
           <rect x="36" y="18" width="4" height="4" fill="white" />
           <rect x="25" y="19" width="2" height="2" fill="black" />
           <rect x="37" y="19" width="2" height="2" fill="black" />
-          
+          <rect x="28" y="24" width="8" height="2" fill="black" />
+          <rect x="28" y="26" width="2" height="2" fill="white" />
+          <rect x="34" y="26" width="2" height="2" fill="white" />
+          <rect x="12" y="28" width="4" height="16" fill="#3A1F12" />
+          <rect x="48" y="28" width="4" height="16" fill="#3A1F12" />
           <g className="leg leg-left">
-            <rect x="20" y="50" width="8" height="14" fill="#4B2C20" />
-            <rect x="16" y="64" width="12" height="4" fill="#4B2C20" />
+            <rect x="22" y="52" width="6" height="12" fill="#4B2C20" />
+            <path d="M22 64 h6 v4 h4 v4 h-14 v-8 z" fill="#4B2C20" />
           </g>
           <g className="leg leg-right">
-            <rect x="36" y="50" width="8" height="14" fill="#4B2C20" />
-            <rect x="36" y="64" width="12" height="4" fill="#4B2C20" />
+            <rect x="36" y="52" width="6" height="12" fill="#4B2C20" />
+            <path d="M36 64 h6 v4 h4 v4 h-14 v-8 z" fill="#4B2C20" />
           </g>
         </svg>
       </div>
