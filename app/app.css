@@ -308,3 +308,9 @@ nav {
   border-bottom: 2px dashed var(--border-color);
   padding: 0.5rem 0;
 }
+
+.interactive-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 2rem;
+}
